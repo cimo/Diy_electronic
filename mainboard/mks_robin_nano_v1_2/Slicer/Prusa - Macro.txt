@@ -1,0 +1,145 @@
+- After layer change G-code:
+; Test - Flow rate
+M593 F0 ; Disable input shaping
+M205 J0 ; Disable junction deviation
+M900 K0 ; Disable linear advance
+M104 S{if layer_num >= 0 && layer_num < 26}220{endif}
+M104 S{if layer_num >= 26 && layer_num < 51}230{endif}
+M104 S{if layer_num >= 51 && layer_num < 76}240{endif}
+M104 S{if layer_num >= 76 && layer_num < 101}250{endif}
+M104 S{if layer_num >= 101 && layer_num < 126}260{endif}
+M104 S{if layer_num >= 126}270{endif}
+; Test - Flow rate
+
+; Test - Input shaping
+M593 F0 ; Disable input shaping
+M205 J0 ; Disable junction deviation
+M900 K0 ; Disable linear advance
+M593 X F{(layer_num < 1 ? 0 : 15 + 45.0 * (layer_num - 1) / 149)}
+M593 Y F{(layer_num < 1 ? 0 : 15 + 45.0 * (layer_num - 1) / 149)}
+{if layer_num >= 0 && layer_num < 26}
+;M593 X F92.5 D0.05
+;M593 Y F72.0 D0.05
+{endif}
+{if layer_num >= 26 && layer_num < 51}
+;M593 X F92.5 D0.10
+;M593 Y F72.0 D0.10
+{endif}
+{if layer_num >= 51 && layer_num < 76}
+;M593 X F92.5 D0.15
+;M593 Y F72.0 D0.15
+{endif}
+{if layer_num >= 76 && layer_num < 101}
+;M593 X F92.5 D0.20
+;M593 Y F72.0 D0.20
+{endif}
+{if layer_num >= 101 && layer_num < 126}
+;M593 X F92.5 D0.25
+;M593 Y F72.0 D0.25
+{endif}
+{if layer_num >= 126}
+;M593 X F92.5 D0.30
+;M593 Y F72.0 D0.30
+{endif}
+; Test - Input shaping
+
+; Test - Junction deviation
+M900 K0 ; Disable linear advance
+M205 J{if layer_num >= 0 && layer_num < 26}0.010{endif}
+M205 J{if layer_num >= 26 && layer_num < 51}0.014{endif}
+M205 J{if layer_num >= 51 && layer_num < 76}0.018{endif}
+M205 J{if layer_num >= 76 && layer_num < 101}0.022{endif}
+M205 J{if layer_num >= 101 && layer_num < 126}0.026{endif}
+M205 J{if layer_num >= 126}0.030{endif}
+; Test - Junction deviation
+
+; Test - Linear advance
+M900 K{if layer_num >= 0 && layer_num < 26}0.02{endif}
+M900 K{if layer_num >= 26 && layer_num < 51}0.04{endif}
+M900 K{if layer_num >= 51 && layer_num < 76}0.06{endif}
+M900 K{if layer_num >= 76 && layer_num < 101}0.08{endif}
+M900 K{if layer_num >= 101 && layer_num < 126}0.10{endif}
+M900 K{if layer_num >= 126}0.12{endif}
+; Test - Linear advance
+
+- Between object G-code (for sequential printing)
+; Test - Junction deviation
+M900 K0 ; Disable linear advance
+{if current_object_idx == 0}
+M117 J0.000
+M205 J0.000
+{elsif current_object_idx == 1}
+M117 J0.004
+M205 J0.004
+{elsif current_object_idx == 2}
+M117 J0.008
+M205 J0.008
+{elsif current_object_idx == 3}
+M117 J0.012
+M205 J0.012
+{elsif current_object_idx == 4}
+M117 J0.016
+M205 J0.016
+{elsif current_object_idx == 5}
+M117 J0.020
+M205 J0.020
+{elsif current_object_idx == 6}
+M117 J0.024
+M205 J0.024
+{elsif current_object_idx == 7}
+M117 J0.028
+M205 J0.028
+{elsif current_object_idx == 8}
+M117 J0.032
+M205 J0.032
+{elsif current_object_idx == 9}
+M117 J0.036
+M205 J0.036
+{elsif current_object_idx == 10}
+M117 J0.040
+M205 J0.040
+{elsif current_object_idx == 11}
+M117 J0.044
+M205 J0.044
+{endif}
+; Test - Junction deviation
+
+; Test - Linear advance
+{if current_object_idx == 0}
+M117 K0.00
+M900 K0.00
+{elsif current_object_idx == 1}
+M117 K0.02
+M900 K0.02
+{elsif current_object_idx == 2}
+M117 K0.04
+M900 K0.04
+{elsif current_object_idx == 3}
+M117 K0.06
+M900 K0.06
+{elsif current_object_idx == 4}
+M117 K0.08
+M900 K0.08
+{elsif current_object_idx == 5}
+M117 K0.10
+M900 K0.10
+{elsif current_object_idx == 6}
+M117 K0.12
+M900 K0.12
+{elsif current_object_idx == 7}
+M117 K0.14
+M900 K0.14
+{elsif current_object_idx == 8}
+M117 K0.16
+M900 K0.16
+{elsif current_object_idx == 9}
+M117 K0.18
+M900 K0.18
+{elsif current_object_idx == 10}
+M117 K0.20
+M900 K0.20
+{elsif current_object_idx == 11}
+M117 K0.22
+M900 K0.22
+{endif}
+; Test - Linear advance

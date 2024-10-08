@@ -1,0 +1,54 @@
+Step X/Y:
+	- Motor step * Micro step / (Pulley pitch * Pulley teeth) = Step
+	200 * 16 / (2 * 20) = 80
+
+Step Z:
+	- Motor step * Micro step / Lead screw pitch = Step
+	200 * 16 / 8 = 400
+
+Step E:
+	- Gear ratio: 1 / 1 = 1
+	- Hobbed bolt:
+		Diameter: 10.9
+		Circumference: 10.9 * 3.1416 = 34.24344
+	- Motor step * Micro step * Gear ration / Hobbed bolt circumference = Step
+	200 * 16 * 1 / 34.24344 = 93.44
+
+	- (100 / Measured) * Current step  = Step
+	- (100 / 103) / 690 = 670
+
+TMC2209:
+	- Stepper motor XYZ:
+		17HS19-2004S1
+		Amps (A):				2.00
+		Resistance (Ohms):		1.4
+		Inductance (mH):		3.00
+		Holding torque (Nm):	0.59
+		Step angle:				1.80
+		Step accuracy:			5.00%
+		Rotor inertia:			82.00
+		Weight (Kg):			0.40
+	- Stepper motor E:
+		LDO-36STH20-1004AHG(XH)
+		Amps (A):				1.20
+		Resistance (Ohms):		2.1
+		Inductance (mH):		1.6
+		Holding torque (Nm):	0.95
+		Step angle:				1.80
+		Step accuracy:			5.00%
+		Rotor inertia:			16.00
+		Weight (Kg):			0.85
+	- VREF:
+		- Current A * Constant * Constant Ohm = V
+		2 * 8 * 0.11 = 1.76 -> 80% -> 1.408
+	- IRMS:
+		- (Vref * Constant A) / Constant V = A -> mA
+		(1.408 * 1.77) / 2.5 = 0.996864 -> 996 -> 990
+
+Hotend position:
+	- MANUAL_X_HOME_POS:
+		- (Bed size X / 2) - (Distance from start to center) = X
+		- (235 / 2) - 132 = -14.5
+	- MANUAL_Y_HOME_POS:
+		- (Bed size Y / 2) - (Distance from start to center) = Y
+		- (235 / 2) - 134 = -16.5
