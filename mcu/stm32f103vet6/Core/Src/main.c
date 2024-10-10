@@ -108,11 +108,6 @@ int main(void)
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
-        // cimo +
-        HAL_Delay(1000);
-
-        HAL_GPIO_TogglePin(C_LED1_GPIO_Port, C_LED1_Pin);
-        HAL_GPIO_TogglePin(C_LED2_GPIO_Port, C_LED2_Pin);
     }
     /* USER CODE END 3 */
 }
@@ -232,14 +227,14 @@ static void MX_GPIO_Init(void)
     __HAL_RCC_GPIOD_CLK_ENABLE();
 
     /*Configure GPIO pin Output Level */
-    HAL_GPIO_WritePin(GPIOB, C_LED1_Pin | C_LED2_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(E_FAN_GPIO_Port, E_FAN_Pin, GPIO_PIN_RESET);
 
-    /*Configure GPIO pins : C_LED1_Pin C_LED2_Pin */
-    GPIO_InitStruct.Pin = C_LED1_Pin | C_LED2_Pin;
+    /*Configure GPIO pin : E_FAN_Pin */
+    GPIO_InitStruct.Pin = E_FAN_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    HAL_GPIO_Init(E_FAN_GPIO_Port, &GPIO_InitStruct);
 
     /* USER CODE BEGIN MX_GPIO_Init_2 */
     /* USER CODE END MX_GPIO_Init_2 */

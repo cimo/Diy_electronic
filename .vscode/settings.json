@@ -44,8 +44,5 @@
     "diffEditor.ignoreTrimWhitespace": false,
     "[c]": {
         "editor.defaultFormatter": "ms-vscode.cpptools"
-    },
-    "files.associations": {
-        "string.h": "c"
     }
 }
