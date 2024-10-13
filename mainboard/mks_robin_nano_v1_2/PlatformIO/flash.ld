@@ -96,7 +96,6 @@ SECTIONS
     _edata = .;        /* define a global symbol at data end */
   } >RAM AT> FLASH /* cimo + */
 
-
   /* Uninitialized data section */
   . = ALIGN(4);
   .bss :
@@ -124,8 +123,6 @@ SECTIONS
     . = ALIGN(8);
   } >RAM /* cimo + */
 
-
-
   /* Remove information from the standard libraries */
   /DISCARD/ :
   {
@@ -133,4 +130,6 @@ SECTIONS
     libm.a ( * )
     libgcc.a ( * )
   }
+
+  .ARM.attributes 0 : { *(.ARM.attributes) }
 }
