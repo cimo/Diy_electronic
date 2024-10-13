@@ -1,112 +1,82 @@
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdio.h>
 
 // Source
-#include "main.h"
 #include "serial.h"
 
-#define RX_BUFFER_SIZE 20
+static UART_HandleTypeDef *uartHandle = NULL;
+static SerialCustomRxCallback customRxCallback = NULL;
 
-static UART_HandleTypeDef *uartHandle;
-
-volatile bool transmissionComplete = false; // Flag to indicate completion
-volatile uint8_t *transmissionBuffer;       // Pointer to the current transmission buffer
-volatile uint16_t transmissionSize;         // Size of the current transmission buffer
-
-uint8_t uartRxBuffer[RX_BUFFER_SIZE];
+#define BUFFER_SIZE 50
+uint8_t rxBuffer[BUFFER_SIZE];
 uint8_t rxIndex = 0;
 
+/*const uint8_t *txMessage = NULL;
+uint16_t txSize = 0;
+bool isTxComplete = false;*/
+
+#define TX_QUEUE_SIZE 5
+
+typedef struct
+{
+    char messageList[TX_QUEUE_SIZE][BUFFER_SIZE];
+    uint8_t head;
+    uint8_t tail;
+    uint8_t count;
+} TxQueue;
+
+TxQueue txQueue = {.messageList = {{0}}, .head = 0, .tail = 0, .count = 0};
+
 // Private
-void sendMessage(uint8_t *message, uint16_t size)
-{
-    transmissionBuffer = message; // Set the buffer to the message to be sent
-    transmissionSize = size;      // Set the size of the message
-    transmissionComplete = false; // Reset the transmission complete flag
-
-    HAL_UART_Transmit_IT(uartHandle, (const uint8_t *)transmissionBuffer, transmissionSize);
-}
-
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
-{
-    if (huart->Instance == USART3)
-    {
-        // Transmission complete logic, if needed
-        transmissionComplete = true; // Mark that the transmission is complete
-
-        // Check if there’s a next message to send
-        if (transmissionBuffer != NULL && transmissionSize > 0)
-        {
-            // Start the next transmission
-            HAL_UART_Transmit_IT(huart, (const uint8_t *)transmissionBuffer, transmissionSize);
-
-            // Reset the transmission buffer and size after starting the next transmission
-            transmissionBuffer = NULL;
-            transmissionSize = 0;
-        }
-    }
-}
-
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
     if (huart->Instance == USART3)
     {
-        if (uartRxBuffer[rxIndex] == '\n' || uartRxBuffer[rxIndex] == '\r')
+        if (rxBuffer[rxIndex] == '\n')
         {
-            uartRxBuffer[rxIndex] = '\0';
+            rxBuffer[rxIndex] = '\0';
 
-            sendMessage((uint8_t *)"Received: ", 10);
-            sendMessage(uartRxBuffer, rxIndex);
-            sendMessage((uint8_t *)"\r\n", 2);
-
-            for (int i = 0; i < rxIndex; i++)
+            if (customRxCallback != NULL)
             {
-                uartRxBuffer[i] = tolower(uartRxBuffer[i]);
-            }
-
-            if (strcmp((char *)uartRxBuffer, "e_fan_on") == 0)
-            {
-                HAL_GPIO_WritePin(E_FAN_GPIO_Port, E_FAN_Pin, GPIO_PIN_SET);
-
-                sendMessage((uint8_t *)"E_FAN: on.\r\n", 12);
-            }
-            else if (strcmp((char *)uartRxBuffer, "e_fan_off") == 0)
-            {
-                HAL_GPIO_WritePin(E_FAN_GPIO_Port, E_FAN_Pin, GPIO_PIN_RESET);
-
-                sendMessage((uint8_t *)"E_FAN: off.\r\n", 13);
-            }
-            else
-            {
-                sendMessage((uint8_t *)"Unknown command.\r\n", 18);
+                customRxCallback();
             }
 
             rxIndex = 0;
         }
         else
         {
-            rxIndex++;
-
-            if (rxIndex >= RX_BUFFER_SIZE)
+            if (rxIndex < BUFFER_SIZE - 1)
             {
+                rxIndex++;
+            }
+            else
+            {
+                SerialSendMessage("UART error: Buffer overflow.");
+
                 rxIndex = 0;
             }
         }
 
-        HAL_StatusTypeDef result = HAL_UART_Receive_IT(uartHandle, &uartRxBuffer[rxIndex], 1);
+        HAL_UART_Receive_IT(uartHandle, &rxBuffer[rxIndex], 1);
+    }
+}
 
-        if (result != HAL_OK)
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if (huart->Instance == USART3)
+    {
+        /*txMessage = NULL;
+        txSize = 0;
+        isTxComplete = true;*/
+
+        txQueue.head = (txQueue.head + 1) % TX_QUEUE_SIZE;
+        txQueue.count--;
+
+        if (txQueue.count > 0)
         {
-            if (result == HAL_ERROR)
-            {
-                sendMessage((uint8_t *)"UART Error: General failure.\r\n", 32);
-            }
-            else if (result == HAL_BUSY)
-            {
-                sendMessage((uint8_t *)"UART Busy: Cannot receive now.\r\n", 34);
-            }
-
-            HAL_UART_Receive_IT(uartHandle, &uartRxBuffer[rxIndex], 1);
+            HAL_UART_Transmit_IT(uartHandle, (const uint8_t *)txQueue.messageList[txQueue.head], strlen(txQueue.messageList[txQueue.head]));
         }
     }
 }
@@ -115,14 +85,54 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
     if (huart->Instance == USART3)
     {
-        HAL_UART_Receive_IT(uartHandle, uartRxBuffer, RX_BUFFER_SIZE);
+        SerialSendMessage("UART error: General failure.");
+
+        rxIndex = 0;
+
+        HAL_UART_Receive_IT(uartHandle, &rxBuffer[rxIndex], 1);
     }
 }
 
 // Public
-void SerialInit(UART_HandleTypeDef *huart)
+void SerialInit(UART_HandleTypeDef *huart, SerialCustomRxCallback rxCallback)
 {
     uartHandle = huart;
+    customRxCallback = rxCallback;
 
-    HAL_UART_Receive_IT(uartHandle, &uartRxBuffer[rxIndex], 1);
+    HAL_UART_Receive_IT(uartHandle, &rxBuffer[rxIndex], 1);
+}
+
+bool SerialCheckCommand(const char *message)
+{
+    if (strcmp((char *)rxBuffer, message) == 0)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+void SerialSendMessage(const char *message)
+{
+    /*char messageFormatted[BUFFER_SIZE];
+    snprintf(messageFormatted, sizeof(messageFormatted), "%s\r\n", message);
+
+    txMessage = (const uint8_t *)messageFormatted;
+    txSize = (uint16_t)strlen(messageFormatted);
+    isTxComplete = false;
+
+    HAL_UART_Transmit_IT(uartHandle, txMessage, txSize);*/
+
+    if (txQueue.count < TX_QUEUE_SIZE)
+    {
+        snprintf(txQueue.messageList[txQueue.tail], sizeof(txQueue.messageList[txQueue.tail]), "%s\r\n", message);
+
+        txQueue.tail = (txQueue.tail + 1) % TX_QUEUE_SIZE;
+        txQueue.count++;
+
+        if (txQueue.count == 1)
+        {
+            HAL_UART_Transmit_IT(uartHandle, (const uint8_t *)txQueue.messageList[txQueue.head], strlen(txQueue.messageList[txQueue.head]));
+        }
+    }
 }

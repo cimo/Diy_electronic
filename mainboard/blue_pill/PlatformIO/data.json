@@ -1,0 +1,28 @@
+{
+    "name": "STM32F103C8 (20KB RAM, 64KB Flash)",
+    "vendor": "ST",
+    "url": "https://www.st.com/en/microcontrollers-microprocessors/stm32f103c8.html",
+    "frameworks": ["stm32cube"],
+    "build": {
+        "core": "stm32",
+        "variant": "stm32f1",
+        "product_line": "STM32F103xB",
+        "mcu": "stm32f103c8t6",
+        "cpu": "cortex-m3",
+        "extra_flags": "-DSTM32F103xB"
+    },
+    "upload": {
+        "protocol": "stlink",
+        "maximum_ram_size": 20480,
+        "maximum_size": 65536,
+        "require_upload_port": true,
+        "wait_for_upload_port": false,
+        "use_1200bps_touch": false,
+        "disable_flushing": false
+    },
+    "debug": {
+        "tool": "stlink",
+        "openocd_target": "stm32f1x",
+        "svd_path": "STM32F103xx.svd"
+    }
+}
