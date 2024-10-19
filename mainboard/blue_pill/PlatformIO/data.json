@@ -1,22 +1,22 @@
 {
-    "name": "STM32F103VE (64KB RAM, 512KB Flash)",
+    "name": "STM32F103C8 (20KB RAM, 64KB Flash)",
     "vendor": "ST",
-    "url": "https://www.st.com/en/microcontrollers-microprocessors/stm32f103ve.html",
+    "url": "https://www.st.com/en/microcontrollers-microprocessors/stm32f103c8.html",
     "frameworks": ["stm32cube", "arduino"],
     "build": {
         "core": "stm32",
-        "mcu": "stm32f103vet6",
+        "mcu": "stm32f103c8t6",
         "cpu": "cortex-m3",
         "f_cpu": "72000000L",
         "variant": "stm32f1",
-        "product_line": "STM32F103xE",
-        "extra_flags": "-DSTM32F1 -DSTM32F103xE"
+        "product_line": "STM32F103xB",
+        "extra_flags": "-DSTM32F1 -DSTM32F103xB"
     },
     "upload": {
         "protocols": ["stlink"],
         "protocol": "stlink",
-        "maximum_ram_size": 65536,
-        "maximum_size": 524288,
+        "maximum_ram_size": 20480,
+        "maximum_size": 65536,
         "require_upload_port": true,
         "wait_for_upload_port": false,
         "use_1200bps_touch": false,

@@ -3,7 +3,7 @@ ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
 /* cimo + */
-_estack = 0x2000FFD8; /* end of RAM */
+_estack = 0x20004FFF; /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0x200; /* required amount of heap  */
 _Min_Stack_Size = 0x400; /* required amount of stack */
@@ -12,8 +12,8 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 /* cimo + */
 MEMORY
 {
-RAM (xrw) : ORIGIN = 0x20000000, LENGTH = 64K
-FLASH (rx) : ORIGIN = 0x8007000, LENGTH = 512K - 28K
+RAM (xrw) : ORIGIN = 0x20000000, LENGTH = 20K
+FLASH (rx) : ORIGIN = 0x8000000, LENGTH = 64K
 }
 
 /* Define output sections */

@@ -32,7 +32,7 @@ TxQueue txQueue = {.messageList = {{0}}, .head = 0, .tail = 0, .count = 0};
 // Private
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    if (huart->Instance == USART3)
+    if (huart->Instance == uartHandle->Instance)
     {
         if (rxBuffer[rxIndex] == '\n')
         {
@@ -65,7 +65,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
-    if (huart->Instance == USART3)
+    if (huart->Instance == uartHandle->Instance)
     {
         /*txMessage = NULL;
         txSize = 0;
@@ -83,7 +83,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
-    if (huart->Instance == USART3)
+    if (huart->Instance == uartHandle->Instance)
     {
         SerialSendMessage("UART error: General failure.");
 

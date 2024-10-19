@@ -10,9 +10,9 @@ void loop()
 
     digitalWrite(PC13, HIGH);
 
-    delay(100);
+    delay(1000);
 
     digitalWrite(PC13, LOW);
 
-    delay(100);
+    delay(1000);
 }
