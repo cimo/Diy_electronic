@@ -22,8 +22,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 // cimo +
-#include <string.h>
-#include "serial.h"
+#include "src_stm32cube/localization.h"
+#include "src_stm32cube/serial.h"
+#include "src_stm32cube/stm32f103c8t6/serial_command.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -60,33 +61,7 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-// cimo +
-void customSerialCommand()
-{
-    if (SerialCheckCommand("led1_on"))
-    {
-        HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
 
-        SerialSendMessage("test1 on.");
-        SerialSendMessage("test2 on.");
-        SerialSendMessage("test3 on.");
-        SerialSendMessage("LED1: On.");
-        SerialSendMessage("test4 on.");
-        SerialSendMessage("test5 on.");
-    }
-    else if (SerialCheckCommand("led1_off"))
-    {
-        HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
-
-        SerialSendMessage("test1 off.");
-        SerialSendMessage("LED1: Off.");
-        SerialSendMessage("test2 off.");
-    }
-    else
-    {
-        SerialSendMessage("UART info: Unknown command.");
-    }
-}
 /* USER CODE END 0 */
 
 /**
@@ -123,13 +98,15 @@ int main(void)
     MX_USART2_UART_Init();
     /* USER CODE BEGIN 2 */
     // cimo +
-    SerialInit(&huart2, customSerialCommand);
+    localizationInit("EN");
+
+    serialInit(&huart2, serialCommand);
     /* USER CODE END 2 */
 
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
-    char message[] = "Program started.\r\n";
-    HAL_UART_Transmit(&huart2, (uint8_t *)message, strlen(message), HAL_MAX_DELAY);
+    // cimo +
+    serialSendMessage(localizationCurrent->serialMessage_programStarted);
 
     while (1)
     {

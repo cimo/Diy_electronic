@@ -46,13 +46,6 @@
         "editor.defaultFormatter": "ms-vscode.cpptools"
     },
     "files.associations": {
-        "stdbool.h": "c",
-        "fatfs.h": "c",
-        "ff.h": "c",
-        "ffconf.h": "c",
-        "integer.h": "c",
-        "stm32f1xx_hal.h": "c",
-        "bsp_driver_sd.h": "c",
-        "stm32f1xx_hal_conf.h": "c"
+        "localization.h": "c"
     }
 }
