@@ -1,8 +1,3 @@
-#include <stdbool.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdio.h>
-
 // Source
 #include "serial.h"
 #include "localization.h"

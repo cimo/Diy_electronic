@@ -46,6 +46,12 @@
         "editor.defaultFormatter": "ms-vscode.cpptools"
     },
     "files.associations": {
-        "localization.h": "c"
+        "localization.h": "c",
+        "serial_command.h": "c",
+        "stm32f1xx_hal.h": "c",
+        "main.h": "c",
+        "*.tcc": "cpp",
+        "fatfs.h": "c",
+        "serial.h": "c"
     }
 }

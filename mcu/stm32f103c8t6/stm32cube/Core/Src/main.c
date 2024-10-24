@@ -18,13 +18,17 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "fatfs.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 // cimo +
-#include "src_stm32cube/localization.h"
-#include "src_stm32cube/serial.h"
-#include "src_stm32cube/stm32f103c8t6/serial_command.h"
+#include "localization.h"
+#include "serial.h"
+#include "serial_command.h"
+#include "lcd.h"
+// #include <stdio.h>
+// #include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,8 +47,11 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+I2C_HandleTypeDef hi2c1;
+
+SPI_HandleTypeDef hspi1;
+
 UART_HandleTypeDef huart1;
-UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
@@ -54,7 +61,8 @@ UART_HandleTypeDef huart2;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
-static void MX_USART2_UART_Init(void);
+static void MX_SPI1_Init(void);
+static void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -78,8 +86,7 @@ int main(void)
     /* MCU Configuration--------------------------------------------------------*/
 
     /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-    // cimo +
-    // HAL_Init();
+    HAL_Init();
 
     /* USER CODE BEGIN Init */
 
@@ -95,18 +102,55 @@ int main(void)
     /* Initialize all configured peripherals */
     MX_GPIO_Init();
     MX_USART1_UART_Init();
-    MX_USART2_UART_Init();
+    MX_SPI1_Init();
+    MX_FATFS_Init();
+    MX_I2C1_Init();
     /* USER CODE BEGIN 2 */
     // cimo +
     localizationInit("EN");
 
-    serialInit(&huart2, serialCommand);
+    serialInit(&huart1, serialCommand);
+
+    serialSendMessage(localizationCurrent->serialMessage_programStarted);
+
+    lcdInit();
+    lcdDraw();
+
+    /*FATFS fs;
+    FIL fil;
+    FRESULT fres;
+
+    serialSendMessage("Mounting SD card...");
+
+    fres = f_mount(&fs, "", 0);
+
+    if (fres != FR_OK)
+    {
+        char err_msg[50];
+        sprintf(err_msg, "Mount error: %d", fres);
+        serialSendMessage(err_msg);
+    }
+    else
+    {
+        HAL_Delay(1);
+
+        serialSendMessage("Opening file...");
+
+        fres = f_open(&fil, "test.txt", FA_OPEN_ALWAYS | FA_WRITE | FA_READ);
+
+        if (fres != FR_OK)
+        {
+            char err_msg[50];
+            sprintf(err_msg, "Open error: %d", fres);
+            serialSendMessage(err_msg);
+        }
+
+        f_close(&fil);
+    }*/
     /* USER CODE END 2 */
 
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
-    // cimo +
-    serialSendMessage(localizationCurrent->serialMessage_programStarted);
 
     while (1)
     {
@@ -156,6 +200,76 @@ void SystemClock_Config(void)
 }
 
 /**
+ * @brief I2C1 Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_I2C1_Init(void)
+{
+
+    /* USER CODE BEGIN I2C1_Init 0 */
+
+    /* USER CODE END I2C1_Init 0 */
+
+    /* USER CODE BEGIN I2C1_Init 1 */
+
+    /* USER CODE END I2C1_Init 1 */
+    hi2c1.Instance = I2C1;
+    hi2c1.Init.ClockSpeed = 400000;
+    hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+    hi2c1.Init.OwnAddress1 = 0;
+    hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+    hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+    hi2c1.Init.OwnAddress2 = 0;
+    hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+    hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+    if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+    {
+        Error_Handler();
+    }
+    /* USER CODE BEGIN I2C1_Init 2 */
+
+    /* USER CODE END I2C1_Init 2 */
+}
+
+/**
+ * @brief SPI1 Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_SPI1_Init(void)
+{
+
+    /* USER CODE BEGIN SPI1_Init 0 */
+
+    /* USER CODE END SPI1_Init 0 */
+
+    /* USER CODE BEGIN SPI1_Init 1 */
+
+    /* USER CODE END SPI1_Init 1 */
+    /* SPI1 parameter configuration*/
+    hspi1.Instance = SPI1;
+    hspi1.Init.Mode = SPI_MODE_MASTER;
+    hspi1.Init.Direction = SPI_DIRECTION_2LINES;
+    hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
+    hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
+    hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+    hspi1.Init.NSS = SPI_NSS_SOFT;
+    hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
+    hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
+    hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
+    hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+    hspi1.Init.CRCPolynomial = 10;
+    if (HAL_SPI_Init(&hspi1) != HAL_OK)
+    {
+        Error_Handler();
+    }
+    /* USER CODE BEGIN SPI1_Init 2 */
+
+    /* USER CODE END SPI1_Init 2 */
+}
+
+/**
  * @brief USART1 Initialization Function
  * @param None
  * @retval None
@@ -188,38 +302,6 @@ static void MX_USART1_UART_Init(void)
 }
 
 /**
- * @brief USART2 Initialization Function
- * @param None
- * @retval None
- */
-static void MX_USART2_UART_Init(void)
-{
-
-    /* USER CODE BEGIN USART2_Init 0 */
-
-    /* USER CODE END USART2_Init 0 */
-
-    /* USER CODE BEGIN USART2_Init 1 */
-
-    /* USER CODE END USART2_Init 1 */
-    huart2.Instance = USART2;
-    huart2.Init.BaudRate = 115200;
-    huart2.Init.WordLength = UART_WORDLENGTH_8B;
-    huart2.Init.StopBits = UART_STOPBITS_1;
-    huart2.Init.Parity = UART_PARITY_NONE;
-    huart2.Init.Mode = UART_MODE_TX_RX;
-    huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-    huart2.Init.OverSampling = UART_OVERSAMPLING_16;
-    if (HAL_UART_Init(&huart2) != HAL_OK)
-    {
-        Error_Handler();
-    }
-    /* USER CODE BEGIN USART2_Init 2 */
-
-    /* USER CODE END USART2_Init 2 */
-}
-
-/**
  * @brief GPIO Initialization Function
  * @param None
  * @retval None
@@ -234,16 +316,27 @@ static void MX_GPIO_Init(void)
     __HAL_RCC_GPIOC_CLK_ENABLE();
     __HAL_RCC_GPIOD_CLK_ENABLE();
     __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
 
     /*Configure GPIO pin Output Level */
-    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(LED_1_GPIO_Port, LED_1_Pin, GPIO_PIN_SET);
 
-    /*Configure GPIO pin : LED1_Pin */
-    GPIO_InitStruct.Pin = LED1_Pin;
+    /*Configure GPIO pin Output Level */
+    HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_RESET);
+
+    /*Configure GPIO pin : LED_1_Pin */
+    GPIO_InitStruct.Pin = LED_1_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    HAL_GPIO_Init(LED1_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(LED_1_GPIO_Port, &GPIO_InitStruct);
+
+    /*Configure GPIO pin : SD_CS_Pin */
+    GPIO_InitStruct.Pin = SD_CS_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(SD_CS_GPIO_Port, &GPIO_InitStruct);
 
     /* USER CODE BEGIN MX_GPIO_Init_2 */
     /* USER CODE END MX_GPIO_Init_2 */
