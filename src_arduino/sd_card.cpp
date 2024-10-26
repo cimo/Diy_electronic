@@ -5,9 +5,9 @@
 SdFs sdFs;
 
 // Public
-bool sdCardInit()
+bool sdCardInit(int pinNumber)
 {
-    if (!sdFs.begin(SD_CS_PIN))
+    if (!sdFs.begin(pinNumber))
     {
         Serial.println("sd_card.cpp - Error: sdCardInit().");
 
@@ -17,41 +17,45 @@ bool sdCardInit()
     return true;
 }
 
-void sdCardOpen(const char *filePath, int mode, Callback callback)
+void sdCardOpen(const char *filePath, int mode, SdCardOpenCallback callback)
 {
-    FsFile fileOpen = sdFs.open(filePath, mode);
+    FsFile fsFile = sdFs.open(filePath, mode);
 
-    if (fileOpen)
-    {
-        callback(fileOpen);
-
-        fileOpen.close();
-    }
-    else
+    if (!fsFile)
     {
         Serial.println("sd_card.cpp - Error: sdCardOpen().");
     }
+    else
+    {
+        callback(fsFile);
+    }
+
+    fsFile.close();
 }
 
 void sdCardList(const char *path)
 {
-    FsFile fileOpen = sdFs.open(path);
+    FsFile fsFile = sdFs.open(path);
 
-    if (fileOpen)
+    if (!fsFile)
+    {
+        Serial.println("sd_card.cpp - Error: sdCardList().");
+    }
+    else
     {
         Serial.println("sd_card.cpp - Info: sdCardList().");
 
         while (true)
         {
-            FsFile item = fileOpen.openNextFile();
+            FsFile fsFileSub = fsFile.openNextFile();
 
-            if (!item)
+            if (!fsFileSub)
             {
                 break;
             }
 
             char filename[13];
-            item.getName(filename, 13);
+            fsFileSub.getName(filename, 13);
 
             if (strlen(filename) > 0)
             {
@@ -59,15 +63,11 @@ void sdCardList(const char *path)
                 Serial.println(filename);
             }
 
-            item.close();
+            fsFileSub.close();
         }
+    }
 
-        fileOpen.close();
-    }
-    else
-    {
-        Serial.println("sd_card.cpp - Error: sdCardList().");
-    }
+    fsFile.close();
 }
 
 void sdCardFormat()
@@ -77,9 +77,9 @@ void sdCardFormat()
     if (!sdFs.format())
     {
         Serial.println("sd_card.cpp - Error: sdCardFormat().");
-
-        return;
     }
-
-    Serial.println("sd_card.cpp - Info: sdCardFormat() - Formatting successful.");
+    else
+    {
+        Serial.println("sd_card.cpp - Info: sdCardFormat() - Formatting successful.");
+    }
 }

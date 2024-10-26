@@ -9,9 +9,11 @@ typedef struct
     const char *uartError_bufferOverflow;
     const char *uartError_generalFailure;
     const char *uartInfo_unknownCommand;
+    const char *serialMessage_programStarted;
     const char *serialMessage_led1On;
     const char *serialMessage_led1Off;
-    const char *serialMessage_programStarted;
+    const char *sdCardError_mount;
+    const char *sdCardError_open;
 } Word;
 
 const Word localization_EN;

@@ -1,6 +1,9 @@
 #ifndef __FATFS_SD_H
 #define __FATFS_SD_H
 
+#include "stm32f1xx_hal.h"
+#include "diskio.h"
+
 /* Definitions for MMC/SDC command */
 #define CMD0 (0x40 + 0)   /* GO_IDLE_STATE */
 #define CMD1 (0x40 + 1)   /* SEND_OP_COND */
@@ -36,7 +39,7 @@ DRESULT SD_disk_ioctl(BYTE pdrv, BYTE cmd, void *buff);
 
 extern SPI_HandleTypeDef hspi1;
 #define HSPI_SDCARD &hspi1
-#define SD_CS_PORT GPIOA
-#define SD_CS_PIN GPIO_PIN_4
+#define SD_CS_PORT GPIOB
+#define SD_CS_PIN GPIO_PIN_0
 
 #endif

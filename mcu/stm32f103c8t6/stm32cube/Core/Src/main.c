@@ -26,9 +26,9 @@
 #include "localization.h"
 #include "serial.h"
 #include "serial_command.h"
+#include "sd_card.h"
+#include "sd_card_command.h"
 #include "lcd.h"
-// #include <stdio.h>
-// #include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -109,44 +109,14 @@ int main(void)
     // cimo +
     localizationInit("EN");
 
-    serialInit(&huart1, serialCommand);
-
+    serialInit(&huart1, serialCommandCallback);
     serialSendMessage(localizationCurrent->serialMessage_programStarted);
+
+    sdCardInit();
+    // sdCardOpen("test.txt", FA_CREATE_ALWAYS | FA_WRITE, sdCardOpenCallback);
 
     lcdInit();
     lcdDraw();
-
-    /*FATFS fs;
-    FIL fil;
-    FRESULT fres;
-
-    serialSendMessage("Mounting SD card...");
-
-    fres = f_mount(&fs, "", 0);
-
-    if (fres != FR_OK)
-    {
-        char err_msg[50];
-        sprintf(err_msg, "Mount error: %d", fres);
-        serialSendMessage(err_msg);
-    }
-    else
-    {
-        HAL_Delay(1);
-
-        serialSendMessage("Opening file...");
-
-        fres = f_open(&fil, "test.txt", FA_OPEN_ALWAYS | FA_WRITE | FA_READ);
-
-        if (fres != FR_OK)
-        {
-            char err_msg[50];
-            sprintf(err_msg, "Open error: %d", fres);
-            serialSendMessage(err_msg);
-        }
-
-        f_close(&fil);
-    }*/
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -285,7 +255,7 @@ static void MX_USART1_UART_Init(void)
 
     /* USER CODE END USART1_Init 1 */
     huart1.Instance = USART1;
-    huart1.Init.BaudRate = 115200;
+    huart1.Init.BaudRate = 9600;
     huart1.Init.WordLength = UART_WORDLENGTH_8B;
     huart1.Init.StopBits = UART_STOPBITS_1;
     huart1.Init.Parity = UART_PARITY_NONE;

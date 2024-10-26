@@ -3,12 +3,10 @@
 
 #include <SdFat.h>
 
-typedef void (*Callback)(FsFile &file);
+typedef void (*SdCardOpenCallback)(FsFile &fsFile);
 
-const int SD_CS_PIN = PA15;
-
-bool sdCardInit();
-void sdCardOpen(const char *filePath, int mode, Callback callback);
+bool sdCardInit(int pinNumber);
+void sdCardOpen(const char *filePath, int mode, SdCardOpenCallback callback);
 void sdCardList(const char *path);
 void sdCardFormat();
 

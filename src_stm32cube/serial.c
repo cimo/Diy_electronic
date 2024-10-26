@@ -1,6 +1,5 @@
 // Source
 #include "serial.h"
-#include "localization.h"
 
 // Private
 #define TX_QUEUE_SIZE 2

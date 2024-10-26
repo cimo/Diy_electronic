@@ -1,6 +1,10 @@
-#ifndef CUSTOM_SERIAL_H
-#define CUSTOM_SERIAL_H
+#ifndef SERIAL_COMMAND_H
+#define SERIAL_COMMAND_H
 
-void serialCommand();
+#include "main.h"
+#include "serial.h"
+#include "localization.h"
+
+void serialCommandCallback();
 
 #endif

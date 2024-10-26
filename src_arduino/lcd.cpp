@@ -2,12 +2,14 @@
 #include "lcd.h"
 
 // Private
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+Adafruit_SSD1306 display;
 
 // Public
-bool lcdInit()
+bool lcdInit(uint8_t screenWidth, uint8_t screenHeight, int8_t oledReset, int8_t screenAddres)
 {
-    if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS))
+    display = Adafruit_SSD1306(screenWidth, screenHeight, &Wire, oledReset);
+
+    if (!display.begin(SSD1306_SWITCHCAPVCC, screenAddres))
     {
         Serial.println("lcd.cpp - Error: lcdInit()");
 
@@ -24,7 +26,7 @@ void lcdDraw()
     display.setTextSize(1);
     display.setTextColor(SSD1306_WHITE);
     display.setCursor(0, 0);
-    display.println("Hello, World!");
+    display.println("CIMO");
 
     display.display();
 }

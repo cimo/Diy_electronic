@@ -2,9 +2,6 @@
 #define FALSE 0
 #define bool BYTE
 
-#include "stm32f1xx_hal.h"
-
-#include "diskio.h"
 #include "fatfs_sd.h"
 
 uint16_t Timer1, Timer2; /* 1ms Timer Counter */

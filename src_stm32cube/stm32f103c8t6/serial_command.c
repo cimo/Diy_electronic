@@ -1,14 +1,10 @@
-#include "main.h"
-
 // Source
-#include "localization.h"
-#include "serial.h"
 #include "serial_command.h"
 
 // Private
 
 // Public
-void serialCommand()
+void serialCommandCallback()
 {
     if (serialCheckCommand("led_1_on"))
     {
