@@ -3,7 +3,7 @@
 // Source
 // #include "sd_card.h"
 // #include "sd_card_command.h"
-#include "lcd.h"
+#include "i2c_lcd.h"
 
 void setup()
 {
@@ -25,12 +25,8 @@ void setup()
 
     sdCardList("/");*/
 
-    if (!lcdInit(128, 64, -1, 0x3C))
-    {
-        return;
-    }
-
-    lcdDraw();
+    i2cLcdInit(&Adafruit128x64, 0x3C, System5x7);
+    i2cLcdText("atmega328p");
 }
 
 void loop()

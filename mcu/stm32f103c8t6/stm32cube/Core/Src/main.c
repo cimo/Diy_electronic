@@ -28,7 +28,7 @@
 #include "serial_command.h"
 #include "sd_card.h"
 #include "sd_card_command.h"
-#include "lcd.h"
+#include "i2c_lcd.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

@@ -1,9 +1,9 @@
 #include <Arduino.h>
 
 // Source
-#include "sd_card.h"
-#include "sd_card_command.h"
-#include "lcd.h"
+// #include "sd_card.h"
+// #include "sd_card_command.h"
+#include "i2c_lcd.h"
 
 void setup()
 {
@@ -16,21 +16,22 @@ void setup()
 
     Serial.println("Program started.");
 
-    if (!sdCardInit(PB0))
+    /*if (!sdCardInit(PB0))
     {
         return;
     }
 
     sdCardOpen("test.txt", FILE_WRITE, sdCardOpenCallback);
 
-    sdCardList("/");
+    sdCardList("/");*/
 
-    if (!lcdInit(128, 64, -1, 0x3C)) // 0x3D
-    {
-        return;
-    }
+    i2cLcdInit(&SH1106_128x64, 0x3C, System5x7);
+    i2cLcdText("stm32f103c8t6");
 
-    lcdDraw();
+    //  i2cLcdTextScrollHorizontal("Test 1234567890-1234567890", 50);
+
+    // const char *lineList[] = {"Line 1", "Line 2", "Line 3", "Line 4", "Line 5", "Line 6", "Line 7"};
+    // i2cLcdTextScrollVertical(lineList, 200);
 }
 
 void loop()
