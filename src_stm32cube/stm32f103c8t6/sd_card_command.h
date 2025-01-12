@@ -3,7 +3,9 @@
 
 #include "fatfs.h"
 #include "serial.h"
+#include "sd_card.h"
 
-void sdCardOpenCallback(FIL *file);
+void sdCardCommandInit();
+void sdCardCommandLoop();
 
 #endif

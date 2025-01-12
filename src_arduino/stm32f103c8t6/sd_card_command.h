@@ -1,8 +1,9 @@
 #ifndef SD_CARD_COMMAND_H
 #define SD_CARD_COMMAND_H
 
-#include <SdFat.h>
+#include "sd_card.h"
 
-void sdCardOpenCallback(FsFile &fsFile);
+void sdCardCommandInit();
+void sdCardCommandLoop();
 
 #endif

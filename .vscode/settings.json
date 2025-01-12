@@ -45,5 +45,14 @@
     "[c]": {
         "editor.defaultFormatter": "ms-vscode.cpptools"
     },
-    "workbench.editor.languageDetection": false
+    "workbench.editor.languageDetection": false,
+    "files.associations": {
+        "cmath": "cpp",
+        "random": "cpp",
+        "localization.h": "c",
+        "serial_command.h": "c",
+        "serial.h": "c",
+        "main.h": "c",
+        "i2c_lcd_command.h": "c"
+    }
 }

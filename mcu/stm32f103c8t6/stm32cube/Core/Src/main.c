@@ -23,12 +23,11 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 // cimo +
+#include "helper.h"
 #include "localization.h"
-#include "serial.h"
 #include "serial_command.h"
-#include "sd_card.h"
-#include "sd_card_command.h"
-#include "i2c_lcd.h"
+#include "i2c_lcd_command.h"
+// #include "sd_card_command.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -69,7 +68,9 @@ static void MX_I2C1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+// cimo +
+uint32_t previousTimeLed = 0;
+uint32_t previousTimei2cLcd = 0;
 /* USER CODE END 0 */
 
 /**
@@ -109,14 +110,11 @@ int main(void)
     // cimo +
     localizationInit("EN");
 
-    serialInit(&huart1, serialCommandCallback);
-    serialSendMessage(localizationCurrent->serialMessage_programStarted);
+    serialCommandInit(&huart1);
 
-    sdCardInit();
-    // sdCardOpen("test.txt", FA_CREATE_ALWAYS | FA_WRITE, sdCardOpenCallback);
+    i2cLcdCommandInit();
 
-    lcdInit();
-    lcdDraw();
+    // sdCardCommandInit();
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -124,8 +122,16 @@ int main(void)
 
     while (1)
     {
-        /* USER CODE END WHILE */
+        /*if (millisecondElapsed(&previousTimeLed, 1000))
+        {
+            HAL_GPIO_TogglePin(LED_1_GPIO_Port, LED_1_Pin);
+        }*/
 
+        if (millisecondElapsed(&previousTimei2cLcd, 500))
+        {
+            i2cLcdCommandLoop();
+        }
+        /* USER CODE END WHILE */
         /* USER CODE BEGIN 3 */
     }
     /* USER CODE END 3 */

@@ -2,11 +2,11 @@
 #define SERIAL_H
 
 #include "stm32f1xx_hal.h"
-#include "localization.h"
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
+#include "localization.h"
 
 typedef void (*SerialCustomRxCallback)();
 

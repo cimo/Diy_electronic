@@ -2,10 +2,10 @@
 #define SD_CARD_H
 
 #include "fatfs.h"
-#include "serial.h"
-#include "localization.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include "localization.h"
+#include "serial.h"
 
 typedef void (*SdCardOpenCallback)(FIL *file);
 
