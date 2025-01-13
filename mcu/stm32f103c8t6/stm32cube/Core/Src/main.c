@@ -27,7 +27,7 @@
 #include "localization.h"
 #include "serial_command.h"
 #include "i2c_lcd_command.h"
-// #include "sd_card_command.h"
+#include "sd_card_command.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -114,7 +114,7 @@ int main(void)
 
     i2cLcdCommandInit();
 
-    // sdCardCommandInit();
+    sdCardCommandInit();
     /* USER CODE END 2 */
 
     /* Infinite loop */

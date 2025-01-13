@@ -28,7 +28,7 @@ void i2cLcdClear()
     display.clear();
 }
 
-void i2cLcdText(const char *text, uint8_t column, uint8_t row)
+void i2cLcdText(char *text, uint8_t column, uint8_t row)
 {
     if ((I2C_LCD_WIDTH == 0 && I2C_LCD_HEIGHT == 0) || row > lineTotal)
     {
@@ -39,7 +39,7 @@ void i2cLcdText(const char *text, uint8_t column, uint8_t row)
     display.print(text);
 }
 
-void i2cLcdTextScrollHorizontal(const char *text, int index, uint8_t column, uint8_t row)
+void i2cLcdTextScrollHorizontal(char *text, int index, uint8_t column, uint8_t row)
 {
     if ((I2C_LCD_WIDTH == 0 && I2C_LCD_HEIGHT == 0) || row > lineTotal)
     {
@@ -67,7 +67,7 @@ void i2cLcdTextScrollHorizontal(const char *text, int index, uint8_t column, uin
     {
         display.setCursor(columnList[index], rowList[index]);
 
-        for (uint8_t a = 0; a < textLengthList[index]; a++)
+        for (int a = 0; a < textLengthList[index]; a++)
         {
             display.print(" ");
         }
@@ -86,7 +86,7 @@ void i2cLcdTextScrollHorizontal(const char *text, int index, uint8_t column, uin
     }
 }
 
-void i2cLcdTextScrollVertical(const char *text, int index, uint8_t column, uint8_t row)
+void i2cLcdTextScrollVertical(char *text, int index, uint8_t column, uint8_t row)
 {
     if ((I2C_LCD_WIDTH == 0 && I2C_LCD_HEIGHT == 0) || row > lineTotal)
     {
@@ -131,7 +131,7 @@ void i2cLcdTextScrollVertical(const char *text, int index, uint8_t column, uint8
     }
 }
 
-void i2cLcdTextScrollVerticalBuffer(const char *messageList[], uint8_t column)
+void i2cLcdTextScrollVerticalBuffer(char *messageList[], uint8_t column)
 {
     if (I2C_LCD_WIDTH == 0 && I2C_LCD_HEIGHT == 0)
     {

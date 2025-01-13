@@ -12,6 +12,7 @@ typedef struct
     const char *serialMessage_programStarted;
     const char *serialMessage_led1On;
     const char *serialMessage_led1Off;
+    const char *sdCardError_init;
     const char *sdCardError_mount;
     const char *sdCardError_open;
 } Word;

@@ -10,6 +10,6 @@ void i2cLcdClear();
 void i2cLcdText(char *text, uint16_t column, uint16_t row);
 void i2cLcdTextScrollHorizontal(char *text, int index, uint16_t column, uint16_t row);
 void i2cLcdTextScrollVertical(char *text, int index, uint16_t column, uint16_t row);
-void i2cLcdTextScrollVerticalBuffer(char *messages[], uint16_t column);
+void i2cLcdTextScrollVerticalBuffer(char *messageList[], uint16_t column);
 
 #endif

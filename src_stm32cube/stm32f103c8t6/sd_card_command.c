@@ -12,8 +12,12 @@ void openCallback(FIL *file)
 // Public
 void sdCardCommandInit()
 {
-    sdCardInit();
-    // sdCardOpen("test.txt", FA_CREATE_ALWAYS | FA_WRITE, openCallback);
+    if (!sdCardInit())
+    {
+        return;
+    }
+
+    sdCardOpen("test.txt", FA_WRITE, openCallback);
 }
 
 void sdCardCommandLoop()

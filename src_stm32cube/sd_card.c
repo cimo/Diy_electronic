@@ -17,7 +17,7 @@ bool sdCardInit()
     if (fResult != FR_OK)
     {
         char buffer[50];
-        snprintf(buffer, sizeof(buffer), "%s%d", "format error", fResult);
+        snprintf(buffer, sizeof(buffer), "%s%d", localizationCurrent->sdCardError_init, fResult);
         serialSendMessage(buffer);
 
         return false;
@@ -37,7 +37,7 @@ bool sdCardInit()
     return true;
 }
 
-void sdCardOpen(const char *filePath, int mode, SdCardOpenCallback callback)
+void sdCardOpen(char *filePath, int mode, SdCardOpenCallback callback)
 {
     fResult = f_open(&fil, filePath, mode);
 
