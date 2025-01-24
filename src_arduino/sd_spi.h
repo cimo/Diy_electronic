@@ -1,5 +1,5 @@
-#ifndef SD_CARD_H
-#define SD_CARD_H
+#ifndef SD_SPI_H
+#define SD_SPI_H
 
 #include <SdFat.h>
 

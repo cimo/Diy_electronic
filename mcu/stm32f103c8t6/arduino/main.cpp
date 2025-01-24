@@ -2,8 +2,8 @@
 
 // Source
 #include "helper.h"
-#include "i2c_lcd_command.h"
-// #include "sd_card_command.h"
+#include "display_i2c_command.h"
+// #include "sd_spi_command.h"
 
 unsigned long previousTimeLed = 0;
 unsigned long previousTimei2cLcd = 0;

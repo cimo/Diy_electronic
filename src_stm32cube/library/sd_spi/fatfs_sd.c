@@ -2,9 +2,16 @@
 #define FALSE 0
 #define bool BYTE
 
+#include "stm32f1xx_hal.h"
+#include "diskio.h"
 #include "fatfs_sd.h"
 
-uint16_t Timer1, Timer2; /* 1ms Timer Counter */
+extern SPI_HandleTypeDef hspi1;
+#define HSPI_SDCARD &hspi1
+#define SD_CS_PORT GPIOB
+#define SD_CS_PIN GPIO_PIN_0
+
+extern volatile uint16_t Timer1, Timer2; /* 1ms Timer Counter */
 
 static volatile DSTATUS Stat = STA_NOINIT; /* Disk Status */
 static uint8_t CardType;                   /* Type 0:MMC, 1:SDC, 2:Block addressing */

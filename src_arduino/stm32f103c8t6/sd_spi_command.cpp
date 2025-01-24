@@ -1,5 +1,5 @@
 // Source
-#include "sd_card_command.h"
+#include "sd_spi_command.h"
 
 // Private
 void openCallback(FsFile &fsFile)

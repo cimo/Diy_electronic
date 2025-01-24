@@ -83,16 +83,6 @@ extern C
     extern FontDef_t Font_7x10;
 
     /**
-     * @brief  11 x 18 pixels font size structure
-     */
-    extern FontDef_t Font_11x18;
-
-    /**
-     * @brief  16 x 26 pixels font size structure
-     */
-    extern FontDef_t Font_16x26;
-
-    /**
      * @}
      */
 

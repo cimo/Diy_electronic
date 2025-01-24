@@ -1,12 +1,12 @@
-#ifndef I2C_LCD_H
-#define I2C_LCD_H
+#ifndef DISPLAY_I2C_H
+#define DISPLAY_I2C_H
 
 #include <Wire.h>
 #include <SSD1306Ascii.h>
 #include <SSD1306AsciiWire.h>
 
-static int16_t I2C_LCD_WIDTH = 0;
-static int16_t I2C_LCD_HEIGHT = 0;
+static int16_t DISPLAY_I2C_WIDTH = 0;
+static int16_t DISPLAY_I2C_HEIGHT = 0;
 
 void i2cLcdInit(const DevType *driver, const int8_t address, const uint8_t *font, int16_t width, int16_t height, int16_t lineTotalValue, int16_t bufferTotalValue);
 void i2cLcdClear();

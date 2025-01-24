@@ -1,5 +1,5 @@
 // Source
-#include "i2c_lcd.h"
+#include "display_i2c.h"
 
 // Private
 FontDef_t *font = NULL;
@@ -8,7 +8,7 @@ uint8_t lineTotal = 0;
 uint8_t bufferTotal = 0;
 
 // Public
-void i2cLcdInit(FontDef_t *fontValue, int16_t lineTotalValue, int16_t bufferTotalValue)
+void i2cLcdInit(FontDef_t *fontValue, uint16_t lineTotalValue, uint16_t bufferTotalValue)
 {
     font = fontValue;
     lineTotal = lineTotalValue;
@@ -29,21 +29,21 @@ void i2cLcdText(char *text, uint16_t column, uint16_t row)
     SSD1306_UpdateScreen();
 }
 
-void i2cLcdTextScrollHorizontal(char *text, int index, uint16_t column, uint16_t row)
+void i2cLcdTextScrollHorizontal(char *text, uint8_t index, uint16_t column, uint16_t row)
 {
     static bool *isStartedList = NULL;
-    static int16_t *columnList = NULL;
-    static int16_t *rowList = NULL;
-    static size_t *textLengthList = NULL;
-    static int16_t *currentPositionList = NULL;
+    static uint16_t *columnList = NULL;
+    static uint16_t *rowList = NULL;
+    static uint8_t *textLengthList = NULL;
+    static uint16_t *currentPositionList = NULL;
 
     if (isStartedList == NULL)
     {
         isStartedList = (bool *)calloc(lineTotal, sizeof(bool));
-        columnList = (int16_t *)calloc(lineTotal, sizeof(int16_t));
-        rowList = (int16_t *)calloc(lineTotal, sizeof(int16_t));
-        textLengthList = (size_t *)calloc(lineTotal, sizeof(size_t));
-        currentPositionList = (int16_t *)calloc(lineTotal, sizeof(int16_t));
+        columnList = (uint16_t *)calloc(lineTotal, sizeof(uint16_t));
+        rowList = (uint16_t *)calloc(lineTotal, sizeof(uint16_t));
+        textLengthList = (uint8_t *)calloc(lineTotal, sizeof(uint8_t));
+        currentPositionList = (uint16_t *)calloc(lineTotal, sizeof(uint16_t));
 
         SSD1306_Clear();
     }
@@ -63,7 +63,7 @@ void i2cLcdTextScrollHorizontal(char *text, int index, uint16_t column, uint16_t
     {
         SSD1306_GotoXY(columnList[index], rowList[index]);
 
-        for (int a = 0; a < textLengthList[index]; a++)
+        for (uint8_t a = 0; a < textLengthList[index]; a++)
         {
             SSD1306_Puts(" ", font, color);
         }
@@ -84,19 +84,19 @@ void i2cLcdTextScrollHorizontal(char *text, int index, uint16_t column, uint16_t
     SSD1306_UpdateScreen();
 }
 
-void i2cLcdTextScrollVertical(char *text, int index, uint16_t column, uint16_t row)
+void i2cLcdTextScrollVertical(char *text, uint8_t index, uint16_t column, uint16_t row)
 {
     static bool *isStartedList = NULL;
-    static int16_t *columnList = NULL;
-    static int16_t *rowList = NULL;
-    static size_t *textLengthList = NULL;
+    static uint16_t *columnList = NULL;
+    static uint16_t *rowList = NULL;
+    static uint8_t *textLengthList = NULL;
 
     if (isStartedList == NULL)
     {
         isStartedList = (bool *)calloc(lineTotal, sizeof(bool));
-        columnList = (int16_t *)calloc(lineTotal, sizeof(int16_t));
-        rowList = (int16_t *)calloc(lineTotal, sizeof(int16_t));
-        textLengthList = (size_t *)calloc(lineTotal, sizeof(size_t));
+        columnList = (uint16_t *)calloc(lineTotal, sizeof(uint16_t));
+        rowList = (uint16_t *)calloc(lineTotal, sizeof(uint16_t));
+        textLengthList = (uint8_t *)calloc(lineTotal, sizeof(uint8_t));
 
         SSD1306_Clear();
     }
@@ -115,7 +115,7 @@ void i2cLcdTextScrollVertical(char *text, int index, uint16_t column, uint16_t r
     {
         SSD1306_GotoXY(columnList[index], rowList[index]);
 
-        for (int a = 0; a < textLengthList[index]; a++)
+        for (uint8_t a = 0; a < textLengthList[index]; a++)
         {
             SSD1306_Puts(" ", font, color);
         }

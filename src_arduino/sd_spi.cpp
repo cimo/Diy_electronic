@@ -1,5 +1,5 @@
 // Source
-#include "sd_card.h"
+#include "sd_spi.h"
 
 // Private
 SdFs sdFs;
@@ -9,7 +9,7 @@ bool sdCardInit(int pinNumber)
 {
     if (!sdFs.begin(pinNumber))
     {
-        Serial.println("sd_card.cpp - Error: sdCardInit().");
+        Serial.println("sd_spi.cpp - Error: sdCardInit().");
 
         return false;
     }
@@ -23,7 +23,7 @@ void sdCardOpen(char *filePath, int mode, SdCardOpenCallback callback)
 
     if (!fsFile)
     {
-        Serial.println("sd_card.cpp - Error: sdCardOpen().");
+        Serial.println("sd_spi.cpp - Error: sdCardOpen().");
     }
     else
     {
@@ -39,11 +39,11 @@ void sdCardList(char *path)
 
     if (!fsFile)
     {
-        Serial.println("sd_card.cpp - Error: sdCardList().");
+        Serial.println("sd_spi.cpp - Error: sdCardList().");
     }
     else
     {
-        Serial.println("sd_card.cpp - Info: sdCardList().");
+        Serial.println("sd_spi.cpp - Info: sdCardList().");
 
         while (true)
         {
@@ -76,10 +76,10 @@ void sdCardFormat()
 
     if (!sdFs.format())
     {
-        Serial.println("sd_card.cpp - Error: sdCardFormat().");
+        Serial.println("sd_spi.cpp - Error: sdCardFormat().");
     }
     else
     {
-        Serial.println("sd_card.cpp - Info: sdCardFormat() - Formatting successful.");
+        Serial.println("sd_spi.cpp - Info: sdCardFormat() - Formatting successful.");
     }
 }

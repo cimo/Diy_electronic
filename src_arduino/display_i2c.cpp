@@ -1,5 +1,5 @@
 // Source
-#include "i2c_lcd.h"
+#include "display_i2c.h"
 
 // Private
 SSD1306AsciiWire display;
@@ -10,8 +10,8 @@ uint8_t bufferTotal = 0;
 // Public
 void i2cLcdInit(const DevType *driver, const int8_t address, const uint8_t *font, int16_t width, int16_t height, int16_t lineTotalValue, int16_t bufferTotalValue)
 {
-    I2C_LCD_WIDTH = width;
-    I2C_LCD_HEIGHT = height;
+    DISPLAY_I2C_WIDTH = width;
+    DISPLAY_I2C_HEIGHT = height;
 
     lineTotal = lineTotalValue;
     bufferTotal = bufferTotalValue;
@@ -30,7 +30,7 @@ void i2cLcdClear()
 
 void i2cLcdText(char *text, uint8_t column, uint8_t row)
 {
-    if ((I2C_LCD_WIDTH == 0 && I2C_LCD_HEIGHT == 0) || row > lineTotal)
+    if ((DISPLAY_I2C_WIDTH == 0 && DISPLAY_I2C_HEIGHT == 0) || row > lineTotal)
     {
         return;
     }
@@ -41,7 +41,7 @@ void i2cLcdText(char *text, uint8_t column, uint8_t row)
 
 void i2cLcdTextScrollHorizontal(char *text, int index, uint8_t column, uint8_t row)
 {
-    if ((I2C_LCD_WIDTH == 0 && I2C_LCD_HEIGHT == 0) || row > lineTotal)
+    if ((DISPLAY_I2C_WIDTH == 0 && DISPLAY_I2C_HEIGHT == 0) || row > lineTotal)
     {
         return;
     }
@@ -88,7 +88,7 @@ void i2cLcdTextScrollHorizontal(char *text, int index, uint8_t column, uint8_t r
 
 void i2cLcdTextScrollVertical(char *text, int index, uint8_t column, uint8_t row)
 {
-    if ((I2C_LCD_WIDTH == 0 && I2C_LCD_HEIGHT == 0) || row > lineTotal)
+    if ((DISPLAY_I2C_WIDTH == 0 && DISPLAY_I2C_HEIGHT == 0) || row > lineTotal)
     {
         return;
     }
@@ -133,7 +133,7 @@ void i2cLcdTextScrollVertical(char *text, int index, uint8_t column, uint8_t row
 
 void i2cLcdTextScrollVerticalBuffer(char *messageList[], uint8_t column)
 {
-    if (I2C_LCD_WIDTH == 0 && I2C_LCD_HEIGHT == 0)
+    if (DISPLAY_I2C_WIDTH == 0 && DISPLAY_I2C_HEIGHT == 0)
     {
         return;
     }

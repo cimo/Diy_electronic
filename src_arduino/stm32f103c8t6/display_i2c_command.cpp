@@ -1,5 +1,5 @@
 // Source
-#include "i2c_lcd_command.h"
+#include "display_i2c_command.h"
 
 // Private
 const char *messageList[15] = {

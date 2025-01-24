@@ -26,8 +26,8 @@
 #include "helper.h"
 #include "localization.h"
 #include "serial_command.h"
-#include "i2c_lcd_command.h"
-#include "sd_card_command.h"
+#include "display_i2c_command.h"
+#include "sd_spi_command.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -112,7 +112,7 @@ int main(void)
 
     serialCommandInit(&huart1);
 
-    i2cLcdCommandInit();
+    i2cLcdCommandInit(&hi2c1);
 
     sdCardCommandInit();
     /* USER CODE END 2 */
@@ -132,6 +132,7 @@ int main(void)
             i2cLcdCommandLoop();
         }
         /* USER CODE END WHILE */
+
         /* USER CODE BEGIN 3 */
     }
     /* USER CODE END 3 */
@@ -231,7 +232,7 @@ static void MX_SPI1_Init(void)
     hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
     hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
     hspi1.Init.NSS = SPI_NSS_SOFT;
-    hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
+    hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
     hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
     hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
     hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;

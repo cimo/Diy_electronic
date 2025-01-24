@@ -2,7 +2,7 @@
 #include "serial.h"
 
 // Private
-#define TX_QUEUE_SIZE 2
+#define TX_QUEUE_SIZE 3
 #define BUFFER_SIZE 50
 
 static UART_HandleTypeDef *uartHandle = NULL;
