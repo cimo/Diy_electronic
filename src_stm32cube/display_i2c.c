@@ -22,14 +22,14 @@ void i2cLcdClear()
     SSD1306_Clear();
 }
 
-void i2cLcdText(char *text, uint16_t column, uint16_t row)
+void i2cLcdText(const char *text, uint16_t column, uint16_t row)
 {
     SSD1306_GotoXY(column, row * 10);
     SSD1306_Puts(text, font, color);
     SSD1306_UpdateScreen();
 }
 
-void i2cLcdTextScrollHorizontal(char *text, uint8_t index, uint16_t column, uint16_t row)
+void i2cLcdTextScrollHorizontal(const char *text, uint8_t index, uint16_t column, uint16_t row)
 {
     static bool *isStartedList = NULL;
     static uint16_t *columnList = NULL;
@@ -84,7 +84,7 @@ void i2cLcdTextScrollHorizontal(char *text, uint8_t index, uint16_t column, uint
     SSD1306_UpdateScreen();
 }
 
-void i2cLcdTextScrollVertical(char *text, uint8_t index, uint16_t column, uint16_t row)
+void i2cLcdTextScrollVertical(const char *text, uint8_t index, uint16_t column, uint16_t row)
 {
     static bool *isStartedList = NULL;
     static uint16_t *columnList = NULL;
@@ -136,7 +136,7 @@ void i2cLcdTextScrollVertical(char *text, uint8_t index, uint16_t column, uint16
     SSD1306_UpdateScreen();
 }
 
-void i2cLcdTextScrollVerticalBuffer(char *messageList[], uint16_t column)
+void i2cLcdTextScrollVerticalBuffer(const char *messageList[], uint16_t column)
 {
     static bool isStarted = false;
     static uint8_t row = 1;

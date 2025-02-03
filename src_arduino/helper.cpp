@@ -5,7 +5,7 @@
 // Private
 
 // Public
-bool millisecondElapsed(unsigned long *previousTime, unsigned long interval)
+bool helperMillisecondElapsed(unsigned long *previousTime, unsigned long interval)
 {
     unsigned long currentTime = millis();
 

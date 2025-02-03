@@ -114,7 +114,7 @@ int main(void)
 
     i2cLcdCommandInit(&hi2c1);
 
-    sdCardCommandInit();
+    sdSpiCommandInit();
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -122,12 +122,12 @@ int main(void)
 
     while (1)
     {
-        /*if (millisecondElapsed(&previousTimeLed, 1000))
+        if (helperMillisecondElapsed(&previousTimeLed, 1000))
         {
             HAL_GPIO_TogglePin(LED_1_GPIO_Port, LED_1_Pin);
-        }*/
+        }
 
-        if (millisecondElapsed(&previousTimei2cLcd, 500))
+        if (helperMillisecondElapsed(&previousTimei2cLcd, 500))
         {
             i2cLcdCommandLoop();
         }

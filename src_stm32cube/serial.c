@@ -2,18 +2,15 @@
 #include "serial.h"
 
 // Private
-#define TX_QUEUE_SIZE 3
-#define BUFFER_SIZE 50
+UART_HandleTypeDef *uartHandle = NULL;
+SerialCustomRxCallback customRxCallback = NULL;
 
-static UART_HandleTypeDef *uartHandle = NULL;
-static SerialCustomRxCallback customRxCallback = NULL;
-
-uint8_t rxBuffer[BUFFER_SIZE];
+uint8_t rxBuffer[SERIAL_BUFFER_SIZE];
 uint8_t rxIndex = 0;
 
 typedef struct
 {
-    char messageList[TX_QUEUE_SIZE][BUFFER_SIZE];
+    char messageList[TX_QUEUE_SIZE][SERIAL_BUFFER_SIZE];
     uint8_t start;
     uint8_t end;
     uint8_t count;
@@ -51,7 +48,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         }
         else
         {
-            if (rxIndex < BUFFER_SIZE - 1)
+            if (rxIndex < SERIAL_BUFFER_SIZE - 1)
             {
                 rxIndex++;
             }

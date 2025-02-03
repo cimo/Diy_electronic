@@ -1,6 +1,9 @@
 #ifndef SERIAL_H
 #define SERIAL_H
 
+#define SERIAL_BUFFER_SIZE 255
+#define TX_QUEUE_SIZE 20
+
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>

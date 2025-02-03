@@ -1,5 +1,5 @@
-#ifndef __FATFS_SD_H
-#define __FATFS_SD_H
+#ifndef __FATFS_SPI_H
+#define __FATFS_SPI_H
 
 /* Definitions for MMC/SDC command */
 #define CMD0 (0x40 + 0)   /* GO_IDLE_STATE */

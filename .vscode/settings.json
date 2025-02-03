@@ -47,9 +47,7 @@
     },
     "workbench.editor.languageDetection": false,
     "files.associations": {
-        "cmath": "cpp",
-        "random": "cpp",
-        "fatfs.h": "c",
-        "display_i2c_command.h": "c"
+        "display_i2c_command.h": "c",
+        "font.h": "c"
     }
 }

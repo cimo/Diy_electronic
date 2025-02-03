@@ -3,7 +3,7 @@
 
 #include "sd_spi.h"
 
-void sdCardCommandInit();
-void sdCardCommandLoop();
+void sdSpiCommandInit();
+void sdSpiCommandLoop();
 
 #endif

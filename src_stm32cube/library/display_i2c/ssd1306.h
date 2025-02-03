@@ -46,12 +46,11 @@ extern C
     SDA        |PB7          |Serial data line
      */
 
-#include "stm32f1xx_hal.h"
-
-#include "fonts.h"
-
 #include "stdlib.h"
 #include "string.h"
+
+#include "stm32f1xx_hal.h"
+#include "font.h"
 
 /* I2C address */
 #ifndef SSD1306_I2C_ADDR

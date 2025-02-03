@@ -38,7 +38,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 // cimo +
-#include "fatfs_sd.h"
+#include "fatfs_spi.h"
 /* Private define ------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
@@ -84,8 +84,8 @@ DSTATUS USER_initialize (
 {
   /* USER CODE BEGIN INIT */
     // cimo +
-    // Stat = STA_NOINIT;
-    // return Stat;
+    /*Stat = STA_NOINIT;
+    return Stat;*/
     return SD_disk_initialize(pdrv);
   /* USER CODE END INIT */
 }
@@ -101,8 +101,8 @@ DSTATUS USER_status (
 {
   /* USER CODE BEGIN STATUS */
     // cimo +
-    // Stat = STA_NOINIT;
-    // return Stat;
+    /*Stat = STA_NOINIT;
+    return Stat;*/
     return SD_disk_status(pdrv);
   /* USER CODE END STATUS */
 }
@@ -124,7 +124,7 @@ DRESULT USER_read (
 {
   /* USER CODE BEGIN READ */
     // cimo +
-    // return RES_OK;
+    /*return RES_OK;*/
     return SD_disk_read(pdrv, buff, sector, count);
   /* USER CODE END READ */
 }
@@ -148,7 +148,7 @@ DRESULT USER_write (
   /* USER CODE BEGIN WRITE */
     /* USER CODE HERE */
     // cimo +
-    // return RES_OK;
+    /*return RES_OK;*/
     return SD_disk_write(pdrv, buff, sector, count);
   /* USER CODE END WRITE */
 }
@@ -170,8 +170,8 @@ DRESULT USER_ioctl (
 {
   /* USER CODE BEGIN IOCTL */
     // cimo +
-    // DRESULT res = RES_ERROR;
-    // return res;
+    /*DRESULT res = RES_ERROR;
+    return res;*/
     return SD_disk_ioctl(pdrv, cmd, buff);
   /* USER CODE END IOCTL */
 }

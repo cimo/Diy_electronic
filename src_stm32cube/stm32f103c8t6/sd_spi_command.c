@@ -2,23 +2,45 @@
 #include "sd_spi_command.h"
 
 // Private
-void openCallback(FIL *fil)
+void writeCallback()
 {
-    sdCardPut("cimo");
+    //...
+}
+
+void readCallback()
+{
+    //...
+}
+
+void removeCallback()
+{
+    //...
 }
 
 // Public
-void sdCardCommandInit()
+void sdSpiCommandInit()
 {
-    if (sdCardInit())
+    if (sdSpiMount())
     {
-        sdCardSpace();
+        // sdSpiSpace();
 
-        sdCardOpen("test.txt", FA_OPEN_ALWAYS | FA_WRITE | FA_READ, openCallback);
+        // sdSpiWrite("test.txt", FA_CREATE_NEW | FA_WRITE, "text\n", writeCallback);
+
+        // sdSpiRead("test.txt", readCallback);
+
+        // sdSpiWrite("test.txt", FA_OPEN_EXISTING | FA_READ | FA_WRITE, "text 1\n", writeCallback);
+
+        // sdSpiRead("test.txt", readCallback);
+
+        // sdSpiDelete("test.txt", removeCallback);
+
+        sdSpiFileList("", false);
+
+        // sdSpiUnmount();
     }
 }
 
-void sdCardCommandLoop()
+void sdSpiCommandLoop()
 {
     //...
 }

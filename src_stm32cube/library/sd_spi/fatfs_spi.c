@@ -4,7 +4,7 @@
 
 #include "stm32f1xx_hal.h"
 #include "diskio.h"
-#include "fatfs_sd.h"
+#include "fatfs_spi.h"
 
 extern SPI_HandleTypeDef hspi1;
 #define HSPI_SDCARD &hspi1

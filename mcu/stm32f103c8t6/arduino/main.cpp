@@ -26,12 +26,12 @@ void setup()
 
 void loop()
 {
-    if (millisecondElapsed(&previousTimeLed, 1000))
+    if (helperMillisecondElapsed(&previousTimeLed, 1000))
     {
         digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
     }
 
-    if (millisecondElapsed(&previousTimei2cLcd, 500))
+    if (helperMillisecondElapsed(&previousTimei2cLcd, 500))
     {
         i2cLcdCommandLoop();
     }
