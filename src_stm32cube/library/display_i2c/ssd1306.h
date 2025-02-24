@@ -50,7 +50,6 @@ extern C
 #include "string.h"
 
 #include "stm32f1xx_hal.h"
-#include "font.h"
 
 /* I2C address */
 #ifndef SSD1306_I2C_ADDR
@@ -67,6 +66,25 @@ extern C
 #ifndef SSD1306_HEIGHT
 #define SSD1306_HEIGHT 64
 #endif
+
+    // font
+
+    typedef struct
+    {
+        uint8_t FontWidth;
+        uint8_t FontHeight;
+        const uint16_t *data;
+    } FontDef_t;
+
+    typedef struct
+    {
+        uint16_t Length;
+        uint16_t Height;
+    } FONTS_SIZE_t;
+
+    extern FontDef_t Font_7x10;
+
+    const char *fontStringSize(const char *text, FONTS_SIZE_t *sizeStruct, FontDef_t *font);
 
     /**
      * @brief  SSD1306 color enumeration
@@ -252,7 +270,7 @@ extern C
      * @param  count: how many bytes will be written
      * @retval None
      */
-    void ssd1306_I2C_WriteMulti(uint8_t address, uint8_t reg, uint8_t * data, uint16_t count);
+    void ssd1306_I2C_WriteMulti(uint8_t address, uint8_t reg, uint8_t *data, uint16_t count);
 
     /**
      * @brief  Draws the Bitmap
@@ -284,7 +302,6 @@ extern C
     // clear the display
 
     void SSD1306_Clear(void);
-
 /* C++ detection */
 #ifdef __cplusplus
 }
