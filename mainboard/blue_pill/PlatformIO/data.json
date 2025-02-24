@@ -2,7 +2,7 @@
     "name": "STM32F103C8 (20KB RAM, 64KB Flash)",
     "vendor": "ST",
     "url": "https://www.st.com/en/microcontrollers-microprocessors/stm32f103c8.html",
-    "frameworks": ["stm32cube", "arduino"],
+    "frameworks": ["stm32cube"],
     "build": {
         "core": "stm32",
         "mcu": "stm32f103c8t6",
