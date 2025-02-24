@@ -17,8 +17,8 @@ Fully integrated with PlatformIO, making it easy to set up a project using just 
 
 2. In the "mcu" folder, create a subfolder (for example "stm32f103c8t6") and add "arduino", "esp32", and "stm32cube" subfolders based on the frameworks you want to use. Multiple frameworks can be used simultaneously.
 
-   The main project files should be placed inside these subfolders.
-STM32 supports CubeMX projects, that need be generated in this folder.
+    The main project files should be placed inside these subfolders.
+    STM32 supports CubeMX projects, that need be generated in this folder.
 
 3. In the "src_arduino", "src_esp32", and "src_stm32cube" folders, you can store your libraries and custom code. Organize them based on the processor folders created in step 2.
 
@@ -27,9 +27,9 @@ STM32 supports CubeMX projects, that need be generated in this folder.
 1. mainboard/nano
 
     **MCU:** nanoatmega328new
-    
+
     **Platform:** atmelavr
-    
+
     **Framework:** arduino
 
 2. mainboard/blue_pill
@@ -58,5 +58,9 @@ If you start a new project, simply copy an existing one, paste it, and customize
 3. **SD_spi**: Supports large-capacity SD cards with full filenames.
 4. **Serial**: Buffered communication without interruptions.
 5. **Helper**: A collection of utility methods.
+
+## File:
+
+1. In each "mainboard" subfolder, there is a "File" folder that contains the circuit schematic, board pin configuration and the module used with the library.
 
 All libraries work the same for both C and C++ projects.
