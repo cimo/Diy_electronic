@@ -18,6 +18,20 @@ bool helperMillisecondElapsed(uint32_t *previousTime, uint32_t interval)
     return false;
 }
 
+bool helperI2cScan(I2C_HandleTypeDef *hi2c, uint8_t addr)
+{
+    HAL_StatusTypeDef status = HAL_I2C_IsDeviceReady(hi2c, addr, 1, 20000);
+
+    if (status == HAL_OK)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 const char *helperFloatToString(float value)
 {
     static char buffer[10];

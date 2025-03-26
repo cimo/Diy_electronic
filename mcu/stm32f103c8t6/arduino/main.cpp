@@ -19,7 +19,7 @@ void setup()
 
     Serial.println("Program started.");
 
-    i2cLcdCommandInit();
+    lcdI2cCommandInit();
 
     // sdCardCommandInit();
 }

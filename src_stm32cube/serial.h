@@ -2,7 +2,7 @@
 #define SERIAL_H
 
 #define SERIAL_BUFFER_SIZE 255
-#define TX_QUEUE_SIZE 20
+#define TX_QUEUE_SIZE 10
 
 #include <stdbool.h>
 #include <string.h>

@@ -6,25 +6,11 @@ const char *messageList[13] = {
     "test 1", "test 2", "test 3", "test 4", "test 5", "test 6",
     "test 7", "test 8", "test 9", "test 10", "test 11", "test 12", ""};
 
-bool i2cScan(I2C_HandleTypeDef *hi2c, uint8_t addr)
-{
-    HAL_StatusTypeDef status = HAL_I2C_IsDeviceReady(hi2c, addr, 1, 20000);
-
-    if (status == HAL_OK)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
 // Public
-void i2cLcdCommandInit(I2C_HandleTypeDef *hi2c)
+void lcdI2cCommandInit(I2C_HandleTypeDef *hi2c)
 {
 
-    if (i2cScan(hi2c, 0x78))
+    if (helperI2cScan(hi2c, 0x78))
     {
         i2cLcdClear();
         i2cLcdInit(&Font_7x10, 6, 13);
@@ -32,7 +18,7 @@ void i2cLcdCommandInit(I2C_HandleTypeDef *hi2c)
     }
 }
 
-void i2cLcdCommandLoop()
+void lcdI2cCommandLoop()
 {
     // i2cLcdTextScrollHorizontal("test 0", 0, 1, 0);
     // i2cLcdTextScrollHorizontal("test 1", 1, 1, 1);

@@ -3,7 +3,7 @@
 
 #include "display_i2c.h"
 
-void i2cLcdCommandInit();
-void i2cLcdCommandLoop();
+void lcdI2cCommandInit();
+void lcdI2cCommandLoop();
 
 #endif

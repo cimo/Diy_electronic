@@ -22,7 +22,7 @@ void sdSpiCommandInit()
 {
     if (sdSpiMount())
     {
-        // sdSpiSpace();
+        sdSpiSpace();
 
         // sdSpiWrite("test.txt", FA_CREATE_NEW | FA_WRITE, "text\n", writeCallback);
 

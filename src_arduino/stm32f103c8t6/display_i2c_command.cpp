@@ -7,20 +7,20 @@ const char *messageList[15] = {
     "cimo 8", "cimo 9", "cimo 10", "cimo 11", "cimo 12", "cimo 13", "cimo 14", ""};
 
 // Public
-void i2cLcdCommandInit()
+void lcdI2cCommandInit()
 {
-    i2cLcdInit(&SH1106_128x64, 0x3C, System5x7, 128, 64, 7, 15);
-    i2cLcdText("stm32f103c8t6", 0, 0);
-    // i2cLcdClear();
+    lcdI2cInit(&SH1106_128x64, 0x3C, System5x7, 128, 64, 7, 15);
+    lcdI2cText("stm32f103c8t6", 0, 0);
+    // lcdI2cClear();
 }
 
-void i2cLcdCommandLoop()
+void lcdI2cCommandLoop()
 {
-    // i2cLcdTextScrollHorizontal("cimo 0", 0, 0, 0);
-    // i2cLcdTextScrollHorizontal("cimo 1", 1, 0, 1);
+    // lcdI2cTextScrollHorizontal("cimo 0", 0, 0, 0);
+    // lcdI2cTextScrollHorizontal("cimo 1", 1, 0, 1);
 
-    // i2cLcdTextScrollVertical("cimo 0", 0, 0, 6);
-    // i2cLcdTextScrollVertical("cimo 1", 1, 0, 7);
+    // lcdI2cTextScrollVertical("cimo 0", 0, 0, 6);
+    // lcdI2cTextScrollVertical("cimo 1", 1, 0, 7);
 
-    // i2cLcdTextScrollVerticalBuffer(messageList, 0);
+    // lcdI2cTextScrollVerticalBuffer(messageList, 0);
 }

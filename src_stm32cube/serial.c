@@ -60,7 +60,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
             }
         }
 
-        HAL_UART_Receive_IT(uartHandle, &rxBuffer[rxIndex], 1);
+        HAL_UART_Receive_DMA(uartHandle, &rxBuffer[rxIndex], 1);
     }
 }
 
@@ -77,7 +77,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
         }
         else if (txQueue.count > 0)
         {
-            HAL_UART_Transmit_IT(uartHandle, (const uint8_t *)txQueue.messageList[txQueue.start], strlen(txQueue.messageList[txQueue.start]));
+            HAL_UART_Transmit_DMA(uartHandle, (const uint8_t *)txQueue.messageList[txQueue.start], strlen(txQueue.messageList[txQueue.start]));
         }
     }
 }
@@ -92,7 +92,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 
         serialSendMessage(localizationCurrent->uartError_generalFailure);
 
-        HAL_UART_Receive_IT(uartHandle, &rxBuffer[rxIndex], 1);
+        HAL_UART_Receive_DMA(uartHandle, &rxBuffer[rxIndex], 1);
     }
 }
 
@@ -102,7 +102,7 @@ void serialInit(UART_HandleTypeDef *huart, SerialCustomRxCallback rxCallback)
     uartHandle = huart;
     customRxCallback = rxCallback;
 
-    HAL_UART_Receive_IT(uartHandle, &rxBuffer[rxIndex], 1);
+    HAL_UART_Receive_DMA(uartHandle, &rxBuffer[rxIndex], 1);
 }
 
 void serialSendMessage(const char *message)
@@ -114,7 +114,7 @@ void serialSendMessage(const char *message)
         txQueue.end = (txQueue.end + 1) % TX_QUEUE_SIZE;
         txQueue.count++;
 
-        HAL_UART_Transmit_IT(uartHandle, (const uint8_t *)txQueue.messageList[txQueue.start], strlen(txQueue.messageList[txQueue.start]));
+        HAL_UART_Transmit_DMA(uartHandle, (const uint8_t *)txQueue.messageList[txQueue.start], strlen(txQueue.messageList[txQueue.start]));
     }
 }
 
