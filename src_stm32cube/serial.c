@@ -5,18 +5,19 @@
 UART_HandleTypeDef *uartHandle = NULL;
 SerialCustomRxCallback customRxCallback = NULL;
 
-uint8_t rxBuffer[SERIAL_BUFFER_SIZE];
+uint8_t rxBuffer[RX_BUFFER_SIZE];
 uint8_t rxIndex = 0;
 
-typedef struct
+typedef struct MessageNode
 {
-    char messageList[TX_QUEUE_SIZE][SERIAL_BUFFER_SIZE];
-    uint8_t start;
-    uint8_t end;
-    uint8_t count;
-} TxQueue;
+    char *data;
+    struct MessageNode *next;
+} MessageNode;
 
-TxQueue txQueue = {.messageList = {{0}}, .start = 0, .end = 0, .count = 0};
+MessageNode *messageHead = NULL;
+MessageNode *messageTail = NULL;
+
+uint8_t dmaBusy = false;
 
 void rxBufferReset()
 {
@@ -24,60 +25,55 @@ void rxBufferReset()
     rxIndex = 0;
 }
 
-void txQueueReset()
-{
-    memset(txQueue.messageList, 0, sizeof(txQueue.messageList));
-    txQueue.start = 0;
-    txQueue.end = 0;
-}
-
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    if (huart->Instance == uartHandle->Instance)
+    if (rxBuffer[rxIndex] == '\n')
     {
-        if (rxBuffer[rxIndex] == '\n')
+        rxBuffer[rxIndex] = '\0';
+
+        if (customRxCallback != NULL)
         {
-            rxBuffer[rxIndex] = '\0';
+            customRxCallback();
+        }
 
-            if (customRxCallback != NULL)
-            {
-                customRxCallback();
-            }
-
-            rxBufferReset();
+        rxBufferReset();
+    }
+    else
+    {
+        if (rxIndex < RX_BUFFER_SIZE - 1)
+        {
+            rxIndex++;
         }
         else
         {
-            if (rxIndex < SERIAL_BUFFER_SIZE - 1)
-            {
-                rxIndex++;
-            }
-            else
-            {
-                rxBufferReset();
+            rxBufferReset();
 
-                serialSendMessage(localizationCurrent->uartError_bufferOverflow);
-            }
+            serialSendMessage(localizationCurrent->uartError_bufferOverflow);
         }
-
-        HAL_UART_Receive_DMA(uartHandle, &rxBuffer[rxIndex], 1);
     }
+
+    HAL_UART_Receive_DMA(uartHandle, &rxBuffer[rxIndex], 1);
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
     if (huart->Instance == uartHandle->Instance)
     {
-        txQueue.start = (txQueue.start + 1) % TX_QUEUE_SIZE;
-        txQueue.count--;
+        MessageNode *oldNode = messageHead;
+        messageHead = messageHead->next;
 
-        if (txQueue.count == 0)
+        free(oldNode->data);
+        free(oldNode);
+
+        if (messageHead)
         {
-            txQueueReset();
+            HAL_UART_Transmit_DMA(uartHandle, (uint8_t *)messageHead->data, strlen(messageHead->data));
         }
-        else if (txQueue.count > 0)
+        else
         {
-            HAL_UART_Transmit_DMA(uartHandle, (const uint8_t *)txQueue.messageList[txQueue.start], strlen(txQueue.messageList[txQueue.start]));
+            dmaBusy = false;
+
+            messageTail = NULL;
         }
     }
 }
@@ -87,8 +83,6 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
     if (huart->Instance == uartHandle->Instance)
     {
         rxBufferReset();
-
-        txQueueReset();
 
         serialSendMessage(localizationCurrent->uartError_generalFailure);
 
@@ -107,14 +101,44 @@ void serialInit(UART_HandleTypeDef *huart, SerialCustomRxCallback rxCallback)
 
 void serialSendMessage(const char *message)
 {
-    if (txQueue.count < TX_QUEUE_SIZE)
+    char *messageFormatted = (char *)malloc(strlen(message) + 2);
+
+    if (!messageFormatted)
     {
-        snprintf(txQueue.messageList[txQueue.end], sizeof(txQueue.messageList[txQueue.end]), "%s\r\n", message);
+        return;
+    }
 
-        txQueue.end = (txQueue.end + 1) % TX_QUEUE_SIZE;
-        txQueue.count++;
+    strcpy(messageFormatted, message);
+    messageFormatted[strlen(message)] = '\n';
+    messageFormatted[strlen(message) + 1] = '\0';
 
-        HAL_UART_Transmit_DMA(uartHandle, (const uint8_t *)txQueue.messageList[txQueue.start], strlen(txQueue.messageList[txQueue.start]));
+    MessageNode *newNode = (MessageNode *)malloc(sizeof(MessageNode));
+
+    if (!newNode)
+    {
+        free(messageFormatted);
+
+        return;
+    }
+
+    newNode->data = messageFormatted;
+    newNode->next = NULL;
+
+    if (!messageTail)
+    {
+        messageHead = messageTail = newNode;
+    }
+    else
+    {
+        messageTail->next = newNode;
+        messageTail = newNode;
+    }
+
+    if (!dmaBusy)
+    {
+        dmaBusy = true;
+
+        HAL_UART_Transmit_DMA(uartHandle, (uint8_t *)messageHead->data, strlen(messageHead->data));
     }
 }
 

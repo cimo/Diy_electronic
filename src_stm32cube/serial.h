@@ -1,13 +1,13 @@
 #ifndef SERIAL_H
 #define SERIAL_H
 
-#define SERIAL_BUFFER_SIZE 255
-#define TX_QUEUE_SIZE 10
+#define RX_BUFFER_SIZE 255
 
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "stm32f1xx_hal.h"
 #include "localization.h"
 

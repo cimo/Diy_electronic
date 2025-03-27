@@ -1,6 +1,8 @@
 #ifndef SD_SPI_H
 #define SD_SPI_H
 
+#define BUFFER_SIZE 255
+
 #include <stdbool.h>
 #include "ff.h"
 #include "helper.h"

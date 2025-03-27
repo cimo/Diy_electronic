@@ -2,7 +2,7 @@
 #include "sd_spi.h"
 
 // Private
-char bufferSerial[SERIAL_BUFFER_SIZE];
+char bufferSerial[BUFFER_SIZE];
 
 FATFS fatFsMount;
 FATFS *fatFsSpace = &fatFsMount;
@@ -12,7 +12,7 @@ UINT read, write;
 DWORD freeCluster;
 DIR dir;
 FILINFO fileInfo;
-char bufferData[SERIAL_BUFFER_SIZE];
+char bufferData[BUFFER_SIZE];
 
 const char *errorCodeMessage()
 {
@@ -80,7 +80,7 @@ bool open(const char *filePath, uint8_t mode)
 
 void bufferDataClear()
 {
-    for (uint8_t a = 0; a < SERIAL_BUFFER_SIZE; a++)
+    for (uint8_t a = 0; a < BUFFER_SIZE; a++)
     {
         bufferData[a] = '\0';
     }
