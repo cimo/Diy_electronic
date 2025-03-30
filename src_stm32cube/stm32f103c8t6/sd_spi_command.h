@@ -4,6 +4,5 @@
 #include "sd_spi.h"
 
 void sdSpiCommandInit();
-void sdSpiCommandLoop();
 
 #endif

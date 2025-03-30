@@ -28,6 +28,7 @@
 #include "serial_command.h"
 #include "display_i2c_command.h"
 #include "sd_spi_command.h"
+#include "tmc2209_command.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -122,6 +123,8 @@ int main(void)
     lcdI2cCommandInit(&hi2c1);
 
     sdSpiCommandInit();
+
+    tmc2209CommandInit(&huart2);
     /* USER CODE END 2 */
 
     /* Infinite loop */

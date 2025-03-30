@@ -2,10 +2,9 @@
 #define SERIAL_COMMAND_H
 
 #include "main.h"
-#include "localization.h"
 #include "serial.h"
+#include "localization.h"
 
 void serialCommandInit(UART_HandleTypeDef *huart);
-void serialCommandLoop();
 
 #endif

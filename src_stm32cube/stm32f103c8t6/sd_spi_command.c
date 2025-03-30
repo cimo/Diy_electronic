@@ -4,17 +4,17 @@
 // Private
 void writeCallback()
 {
-    //...
+    serialSendMessage("%s", localizationCurrent->sdSpiInfo_writeCompleted);
 }
 
 void readCallback()
 {
-    //...
+    serialSendMessage("%s", localizationCurrent->sdSpiInfo_readCompleted);
 }
 
-void removeCallback()
+void deleteCallback()
 {
-    //...
+    serialSendMessage("%s", localizationCurrent->sdSpiInfo_deleteCompleted);
 }
 
 // Public
@@ -24,23 +24,18 @@ void sdSpiCommandInit()
     {
         sdSpiSpace();
 
-        // sdSpiWrite("test.txt", FA_CREATE_NEW | FA_WRITE, "text\n", writeCallback);
+        sdSpiDirectoryList("", false);
+
+        // sdSpiWrite("test.txt", "cimo 1\n", true, writeCallback);
 
         // sdSpiRead("test.txt", readCallback);
 
-        // sdSpiWrite("test.txt", FA_OPEN_EXISTING | FA_READ | FA_WRITE, "text 1\n", writeCallback);
+        // sdSpiWrite("test1.txt", "cimo 2\n", false, writeCallback);
 
-        // sdSpiRead("test.txt", readCallback);
+        // sdSpiRead("test1.txt", readCallback);
 
-        // sdSpiDelete("test.txt", removeCallback);
-
-        sdSpiFileList("", false);
+        // sdSpiDelete("test1.txt", deleteCallback);
 
         // sdSpiUnmount();
     }
-}
-
-void sdSpiCommandLoop()
-{
-    //...
 }

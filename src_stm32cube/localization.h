@@ -16,7 +16,11 @@ typedef struct
     const char *sdSpiInfo_spaceTotal;
     const char *sdSpiInfo_spaceFree;
     const char *sdSpiInfo_spaceUsed;
-    const char *sdSpiInfo_data;
+    const char *sdSpiInfo_directoryList;
+    const char *sdSpiInfo_fileData;
+    const char *sdSpiInfo_writeCompleted;
+    const char *sdSpiInfo_readCompleted;
+    const char *sdSpiInfo_deleteCompleted;
     const char *sdSpiError_mount;
     const char *sdSpiError_open;
     const char *sdSpiError_getfree;
