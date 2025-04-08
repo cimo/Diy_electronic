@@ -28,32 +28,35 @@ void rxBufferReset()
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    if (rxBuffer[rxIndex] == '\n')
+    if (huart->Instance == uartHandle1->Instance)
     {
-        rxBuffer[rxIndex] = '\0';
-
-        if (customRxCallback != NULL)
+        if (rxBuffer[rxIndex] == '\n')
         {
-            customRxCallback();
-        }
+            rxBuffer[rxIndex] = '\0';
 
-        rxBufferReset();
-    }
-    else
-    {
-        if (rxIndex < SERIAL_BUFFER_SIZE - 1)
-        {
-            rxIndex++;
+            if (customRxCallback != NULL)
+            {
+                customRxCallback();
+            }
+
+            rxBufferReset();
         }
         else
         {
-            rxBufferReset();
+            if (rxIndex < SERIAL_BUFFER_SIZE - 1)
+            {
+                rxIndex++;
+            }
+            else
+            {
+                rxBufferReset();
 
-            serialSendMessage("%s", localizationCurrent->uartError_bufferOverflow);
+                serialSendMessage(localizationCurrent->uartError_bufferOverflow);
+            }
         }
-    }
 
-    HAL_UART_Receive_DMA(uartHandle1, &rxBuffer[rxIndex], 1);
+        HAL_UART_Receive_DMA(uartHandle1, &rxBuffer[rxIndex], 1);
+    }
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
@@ -87,7 +90,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
     {
         rxBufferReset();
 
-        serialSendMessage("%s", localizationCurrent->uartError_generalFailure);
+        serialSendMessage(localizationCurrent->uartError_generalFailure);
 
         HAL_UART_Receive_DMA(uartHandle1, &rxBuffer[rxIndex], 1);
     }
@@ -98,8 +101,6 @@ void serialInit(UART_HandleTypeDef *huart, SerialCustomRxCallback rxCallback)
 {
     uartHandle1 = huart;
     customRxCallback = rxCallback;
-
-    HAL_UART_Receive_DMA(uartHandle1, &rxBuffer[rxIndex], 1);
 }
 
 void serialSendMessage(const char *format, ...)

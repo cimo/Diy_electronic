@@ -3,6 +3,6 @@
 
 #include "sd_spi.h"
 
-void sdSpiCommandInit();
+void sdSpiCommandInit(SPI_HandleTypeDef *hspi2);
 
 #endif

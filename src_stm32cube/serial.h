@@ -1,8 +1,6 @@
 #ifndef SERIAL_H
 #define SERIAL_H
 
-#define SERIAL_BUFFER_SIZE 255
-
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
@@ -11,6 +9,8 @@
 #include <stdarg.h>
 #include "stm32f1xx_hal.h"
 #include "localization.h"
+
+#define SERIAL_BUFFER_SIZE 255
 
 typedef void (*SerialCustomRxCallback)();
 

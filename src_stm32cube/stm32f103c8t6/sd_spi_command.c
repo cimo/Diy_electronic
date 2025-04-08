@@ -4,21 +4,21 @@
 // Private
 void writeCallback()
 {
-    serialSendMessage("%s", localizationCurrent->sdSpiInfo_writeCompleted);
+    serialSendMessage(localizationCurrent->sdSpiInfo_writeCompleted);
 }
 
 void readCallback()
 {
-    serialSendMessage("%s", localizationCurrent->sdSpiInfo_readCompleted);
+    serialSendMessage(localizationCurrent->sdSpiInfo_readCompleted);
 }
 
 void deleteCallback()
 {
-    serialSendMessage("%s", localizationCurrent->sdSpiInfo_deleteCompleted);
+    serialSendMessage(localizationCurrent->sdSpiInfo_deleteCompleted);
 }
 
 // Public
-void sdSpiCommandInit()
+void sdSpiCommandInit(SPI_HandleTypeDef *hspi2)
 {
     if (sdSpiMount())
     {
@@ -36,6 +36,6 @@ void sdSpiCommandInit()
 
         // sdSpiDelete("test1.txt", deleteCallback);
 
-        // sdSpiUnmount();
+        sdSpiUnmount();
     }
 }

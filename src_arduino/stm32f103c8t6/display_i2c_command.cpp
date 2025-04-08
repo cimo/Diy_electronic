@@ -9,9 +9,9 @@ const char *messageList[15] = {
 // Public
 void lcdI2cCommandInit()
 {
-    lcdI2cInit(&SH1106_128x64, 0x3C, System5x7, 128, 64, 7, 15);
-    lcdI2cText("stm32f103c8t6", 0, 0);
-    // lcdI2cClear();
+    i2cLcdInit(&SH1106_128x64, 0x3C, System5x7, 128, 64, 7, 15);
+    i2cLcdClear();
+    i2cLcdText("stm32f103c8t6", 0, 0);
 }
 
 void lcdI2cCommandLoop()

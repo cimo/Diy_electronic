@@ -2,14 +2,14 @@
 #define FALSE 0
 #define bool BYTE
 
+#include "main.h"
 #include "stm32f1xx_hal.h"
 #include "diskio.h"
 #include "fatfs_spi.h"
 
-extern SPI_HandleTypeDef hspi1;
-#define HSPI_SDCARD &hspi1
-#define SD_CS_PORT GPIOB
-#define SD_CS_PIN GPIO_PIN_0
+extern SPI_HandleTypeDef hspi2;
+#define HSPI_SDCARD &hspi2
+#define SPI_TIMEOUT 100
 
 extern volatile uint16_t Timer1, Timer2; /* 1ms Timer Counter */
 
@@ -24,14 +24,14 @@ static uint8_t PowerFlag = 0;              /* Power flag */
 /* slave select */
 static void SELECT(void)
 {
-    HAL_GPIO_WritePin(SD_CS_PORT, SD_CS_PIN, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(SD_SPI_CS_GPIO_Port, SD_SPI_CS_Pin, GPIO_PIN_RESET);
     HAL_Delay(1);
 }
 
 /* slave deselect */
 static void DESELECT(void)
 {
-    HAL_GPIO_WritePin(SD_CS_PORT, SD_CS_PIN, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(SD_SPI_CS_GPIO_Port, SD_SPI_CS_Pin, GPIO_PIN_SET);
     HAL_Delay(1);
 }
 

@@ -16,8 +16,9 @@ void i2cLcdInit(const DevType *driver, const int8_t address, const uint8_t *font
     lineTotal = lineTotalValue;
     bufferTotal = bufferTotalValue;
 
+    Wire.setSDA(PB7);
+    Wire.setSCL(PB6);
     Wire.begin();
-    Wire.setClock(400000L);
 
     display.begin(driver, address);
     display.setFont(font);
@@ -28,7 +29,7 @@ void i2cLcdClear()
     display.clear();
 }
 
-void i2cLcdText(char *text, uint8_t column, uint8_t row)
+void i2cLcdText(const char *text, uint8_t column, uint8_t row)
 {
     if ((DISPLAY_I2C_WIDTH == 0 && DISPLAY_I2C_HEIGHT == 0) || row > lineTotal)
     {

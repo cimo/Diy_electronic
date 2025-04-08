@@ -17,7 +17,7 @@ bool sdCardInit(int pinNumber)
     return true;
 }
 
-void sdCardOpen(char *filePath, int mode, SdCardOpenCallback callback)
+void sdCardOpen(const char *filePath, int mode, SdCardOpenCallback callback)
 {
     FsFile fsFile = sdFs.open(filePath, mode);
 
@@ -33,7 +33,7 @@ void sdCardOpen(char *filePath, int mode, SdCardOpenCallback callback)
     fsFile.close();
 }
 
-void sdCardList(char *path)
+void sdCardList(const char *path)
 {
     FsFile fsFile = sdFs.open(path);
 

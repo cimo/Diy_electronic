@@ -49,6 +49,16 @@
     "files.associations": {
         "main.h": "c",
         "display_i2c_command.h": "c",
-        "sd_spi.h": "c"
+        "sd_spi.h": "c",
+        "tmc2209_command.h": "c",
+        "fatfs_spi.h": "c",
+        "display_i2c.h": "c",
+        "array": "cpp",
+        "deque": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp"
     }
 }

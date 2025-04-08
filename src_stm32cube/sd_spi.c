@@ -139,7 +139,7 @@ void sdSpiDirectoryList(const char *path, bool isShowHidden)
         return;
     }
 
-    serialSendMessage("%s", localizationCurrent->sdSpiInfo_directoryList);
+    serialSendMessage(localizationCurrent->sdSpiInfo_directoryList);
 
     while (1)
     {

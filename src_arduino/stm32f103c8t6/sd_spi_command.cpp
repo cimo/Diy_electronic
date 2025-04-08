@@ -17,7 +17,7 @@ void sdCardCommandInit()
         return;
     }
 
-    sdCardOpen("test.txt", FILE_WRITE, openCallback);
+    // sdCardOpen("test.txt", FILE_WRITE, openCallback);
 
     sdCardList("/");
 }
