@@ -66,7 +66,7 @@ bool open(const char *filePath, uint8_t mode)
 
     if (fResult != FR_OK)
     {
-        serialSendMessage("%s%s\n", localizationCurrent->sdSpiError_open, errorCodeMessage());
+        serialAsynchronousSendMessage("%s%s\n", localizationCurrent->sdSpiError_open, errorCodeMessage());
 
         fResult = f_close(&fil);
 
@@ -91,7 +91,7 @@ bool sdSpiMount()
 
     if (fResult != FR_OK)
     {
-        serialSendMessage("%s%s\n", localizationCurrent->sdSpiError_mount, errorCodeMessage());
+        serialAsynchronousSendMessage("%s%s\n", localizationCurrent->sdSpiError_mount, errorCodeMessage());
 
         return false;
     }
@@ -105,7 +105,7 @@ void sdSpiSpace()
 
     if (fResult != FR_OK)
     {
-        serialSendMessage("%s%s\n", localizationCurrent->sdSpiError_getfree, errorCodeMessage());
+        serialAsynchronousSendMessage("%s%s\n", localizationCurrent->sdSpiError_getfree, errorCodeMessage());
 
         fResult = f_close(&fil);
 
@@ -117,13 +117,13 @@ void sdSpiSpace()
     uint64_t spaceUsed = spaceTotal - spaceFree;
 
     const char *spaceTotalUnit = helperConvertSizeUnit(spaceTotal);
-    serialSendMessage("%s%s", localizationCurrent->sdSpiInfo_spaceTotal, spaceTotalUnit);
+    serialAsynchronousSendMessage("%s%s", localizationCurrent->sdSpiInfo_spaceTotal, spaceTotalUnit);
 
     const char *spaceFreeUnit = helperConvertSizeUnit(spaceFree);
-    serialSendMessage("%s%s", localizationCurrent->sdSpiInfo_spaceFree, spaceFreeUnit);
+    serialAsynchronousSendMessage("%s%s", localizationCurrent->sdSpiInfo_spaceFree, spaceFreeUnit);
 
     const char *spaceUsedUnit = helperConvertSizeUnit(spaceUsed);
-    serialSendMessage("%s%s", localizationCurrent->sdSpiInfo_spaceUsed, spaceUsedUnit);
+    serialAsynchronousSendMessage("%s%s", localizationCurrent->sdSpiInfo_spaceUsed, spaceUsedUnit);
 }
 
 void sdSpiDirectoryList(const char *path, bool isShowHidden)
@@ -132,14 +132,14 @@ void sdSpiDirectoryList(const char *path, bool isShowHidden)
 
     if (fResult != FR_OK)
     {
-        serialSendMessage("%s%s\n", localizationCurrent->sdSpiError_open_dir, errorCodeMessage());
+        serialAsynchronousSendMessage("%s%s\n", localizationCurrent->sdSpiError_open_dir, errorCodeMessage());
 
         fResult = f_closedir(&dir);
 
         return;
     }
 
-    serialSendMessage(localizationCurrent->sdSpiInfo_directoryList);
+    serialAsynchronousSendMessage(localizationCurrent->sdSpiInfo_directoryList);
 
     while (1)
     {
@@ -167,7 +167,7 @@ void sdSpiDirectoryList(const char *path, bool isShowHidden)
         const char *size = helperConvertSizeUnit(fileInfo.fsize);
         const char *name = fileInfo.lfname[0] ? fileInfo.lfname : fileInfo.fname;
 
-        serialSendMessage("%c%c%c%c %s %s/%s", tagDirectory, tagReadOnly, tagSystem, tagHidden, size, path, name);
+        serialAsynchronousSendMessage("%c%c%c%c %s %s/%s", tagDirectory, tagReadOnly, tagSystem, tagHidden, size, path, name);
     }
 
     fResult = f_closedir(&dir);
@@ -212,7 +212,7 @@ void sdSpiWrite(const char *filePath, const char *data, bool isAppend, sdSpiCall
 
             if (fResult != FR_OK)
             {
-                serialSendMessage("%s%s\n", localizationCurrent->sdSpiError_lseek, errorCodeMessage());
+                serialAsynchronousSendMessage("%s%s\n", localizationCurrent->sdSpiError_lseek, errorCodeMessage());
 
                 fResult = f_close(&fil);
 
@@ -224,7 +224,7 @@ void sdSpiWrite(const char *filePath, const char *data, bool isAppend, sdSpiCall
 
         if (fResult != FR_OK)
         {
-            serialSendMessage("%s%s\n", localizationCurrent->sdSpiError_write, errorCodeMessage());
+            serialAsynchronousSendMessage("%s%s\n", localizationCurrent->sdSpiError_write, errorCodeMessage());
 
             fResult = f_close(&fil);
 
@@ -247,7 +247,7 @@ void sdSpiRead(const char *filePath, sdSpiCallback callback)
 
         if (fResult != FR_OK)
         {
-            serialSendMessage("%s%s\n", localizationCurrent->sdSpiError_read, errorCodeMessage());
+            serialAsynchronousSendMessage("%s%s\n", localizationCurrent->sdSpiError_read, errorCodeMessage());
 
             fResult = f_close(&fil);
 
@@ -256,7 +256,7 @@ void sdSpiRead(const char *filePath, sdSpiCallback callback)
 
         fResult = f_close(&fil);
 
-        serialSendMessage("%s\n%s", localizationCurrent->sdSpiInfo_fileData, bufferFileData);
+        serialAsynchronousSendMessage("%s\n%s", localizationCurrent->sdSpiInfo_fileData, bufferFileData);
 
         bufferFileDataClear();
 
@@ -270,7 +270,7 @@ void sdSpiDelete(const char *filePath, sdSpiCallback callback)
 
     if (fResult != FR_OK)
     {
-        serialSendMessage("%s%s\n", localizationCurrent->sdSpiError_unlink, errorCodeMessage());
+        serialAsynchronousSendMessage("%s%s\n", localizationCurrent->sdSpiError_unlink, errorCodeMessage());
 
         fResult = f_close(&fil);
 
@@ -288,7 +288,7 @@ bool sdSpiUnmount()
 
     if (fResult != FR_OK)
     {
-        serialSendMessage("%s%s\n", localizationCurrent->sdSpiError_mount, errorCodeMessage());
+        serialAsynchronousSendMessage("%s%s\n", localizationCurrent->sdSpiError_mount, errorCodeMessage());
 
         return false;
     }

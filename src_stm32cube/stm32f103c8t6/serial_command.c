@@ -2,30 +2,45 @@
 #include "serial_command.h"
 
 // Private
-void initCallback()
+void rxCallbackAsynchronousInit()
 {
-    if (serialReceiveMessageCheck("led_1_on"))
+    if (serialAsynchronousReceiveMessageCheck("led_1_on"))
     {
         HAL_GPIO_WritePin(LED_1_GPIO_Port, LED_1_Pin, GPIO_PIN_RESET);
 
-        serialSendMessage(localizationCurrent->serialMessage_led1On);
+        serialAsynchronousSendMessage(localizationCurrent->serialMessage_led1On);
     }
-    else if (serialReceiveMessageCheck("led_1_off"))
+    else if (serialAsynchronousReceiveMessageCheck("led_1_off"))
     {
         HAL_GPIO_WritePin(LED_1_GPIO_Port, LED_1_Pin, GPIO_PIN_SET);
 
-        serialSendMessage(localizationCurrent->serialMessage_led1Off);
+        serialAsynchronousSendMessage(localizationCurrent->serialMessage_led1Off);
     }
     else
     {
-        serialSendMessage(localizationCurrent->uartInfo_unknownCommand);
+        serialAsynchronousSendMessage(localizationCurrent->uartInfo_unknownCommand);
+    }
+}
+
+void rxCallbackSingleWireInit()
+{
+    if (serialSingleWireReceiveMessageCheck("test_message"))
+    {
+        serialSingleWireSendMessage("Received");
     }
 }
 
 // Public
-void serialCommandInit(UART_HandleTypeDef *huart)
+void serialCommandAsynchronousInit(UART_HandleTypeDef *huart)
 {
-    serialInit(huart, initCallback);
+    serialAsynchronousInit(huart, rxCallbackAsynchronousInit);
 
-    serialSendMessage(localizationCurrent->serialMessage_programStarted);
+    serialAsynchronousSendMessage(localizationCurrent->serialMessage_asynchronousStarted);
+}
+
+void serialCommandSingleWireInit(UART_HandleTypeDef *huart)
+{
+    serialSingleWireInit(huart, rxCallbackSingleWireInit);
+
+    serialSingleWireSendMessage(localizationCurrent->serialMessage_singleWireStarted);
 }

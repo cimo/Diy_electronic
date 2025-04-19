@@ -6,11 +6,11 @@
 // Public
 void localizationInit(const char *value)
 {
-    if (strcmp(value, "EN") == 0)
+    if (strcmp(value, "en") == 0)
     {
         localizationCurrent = &localization_EN;
     }
-    else if (strcmp(value, "IT") == 0)
+    else if (strcmp(value, "it") == 0)
     {
         localizationCurrent = &localization_IT;
     }

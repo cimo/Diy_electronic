@@ -5,7 +5,8 @@
 
 // Public
 const Word localization_EN = {
-    .serialMessage_programStarted = "Program started.",
+    .serialMessage_asynchronousStarted = "Serial: Asynchronous started.",
+    .serialMessage_singleWireStarted = "Serial: Single wire started.",
     .serialMessage_led1On = "LED1: On.",
     .serialMessage_led1Off = "LED1: Off.",
     .genericError = "Unknown error.",

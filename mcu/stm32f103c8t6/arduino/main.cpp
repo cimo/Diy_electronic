@@ -1,11 +1,11 @@
 #include <Arduino.h>
-// #include <TMCStepper.h>
 
 // Source
 #include "helper.h"
 #include "display_i2c_command.h"
 // #include "sd_spi_command.h"
 
+/*
 #include <SPI.h>
 #include <SdFat.h>
 
@@ -53,24 +53,33 @@ void printDirectory(File &dir, int numTabs)
         entry.close();
     }
 }
+*/
 
 uint32_t previousTimeLed = 0;
 uint32_t previousTimeI2cLcd = 0;
 uint32_t previousTimeTmc2209 = 0;
 
-/* HardwareSerial huart2(USART2);
+HardwareSerial Serial3(PB11, PB10);
 HardwareTimer *htim2 = new HardwareTimer(TIM2);
 
-#define MOTOR_COUNT 1
-#define MOTOR_X_EN_PIN PB1
-#define MOTOR_X_DIR_PIN PA1
-#define MOTOR_X_STEP_PIN PA0
+#define MOTOR_X_ADDRESS 0x01
+#define MOTOR_X_EN PA0
+#define MOTOR_X_DIR PA1
+#define MOTOR_X_STEP PA2
 
 #define TMC2209_SYNC 0x05
-#define TMC2209_READ 0x80
-#define TMC2209_WRITE 0x00
+#define TMC2209_READ 0x7F
+#define TMC2209_WRITE 0x80
 
+#define TMC2209_GCONF 0x00
+#define TMC2209_IHOLD_IRUN 0x10
 #define TMC2209_DRVSTATUS 0x6F
+
+const uint16_t rmsCurrent = 800;
+const uint16_t stepRevolution = 200; // 1.8°
+const uint16_t microstep = 32;       // 1, 2, 4, 8, 16, 32, 64, 128, 256
+const uint32_t stepTotal = stepRevolution * microstep;
+volatile uint16_t stepCount = 0;
 
 void serialSendMessage(const char *format, ...)
 {
@@ -84,102 +93,7 @@ void serialSendMessage(const char *format, ...)
     Serial.println(buffer);
 }
 
-uint8_t tmc2209Crc8(uint8_t *data, uint8_t length)
-{
-    uint8_t crc = 0;
-
-    for (uint8_t i = 0; i < length; i++)
-    {
-        uint8_t currentByte = data[i];
-
-        for (uint8_t j = 0; j < 8; j++)
-        {
-            if ((crc >> 7) ^ (currentByte & 0x01))
-                crc = (crc << 1) ^ 0x07;
-            else
-                crc = (crc << 1);
-
-            currentByte >>= 1;
-        }
-    }
-
-    return crc;
-}
-
-void tmc2209RegisterWrite(uint8_t address, uint8_t reg, uint32_t data)
-{
-    uint8_t dataWrite[8];
-
-    dataWrite[0] = TMC2209_SYNC;
-    dataWrite[1] = address;
-    dataWrite[2] = reg | TMC2209_WRITE;
-    dataWrite[3] = (data >> 24) & 0xFF;
-    dataWrite[4] = (data >> 16) & 0xFF;
-    dataWrite[5] = (data >> 8) & 0xFF;
-    dataWrite[6] = data & 0xFF;
-    dataWrite[7] = tmc2209Crc8(dataWrite, 7);
-
-    huart2.write(dataWrite, 8);
-}
-
-uint32_t tmc2209RegisterRead(uint8_t address, uint8_t reg)
-{
-    uint8_t dataWrite[4];
-    uint8_t dataResponse[8];
-
-    dataWrite[0] = TMC2209_SYNC;
-    dataWrite[1] = address;
-    dataWrite[2] = reg | TMC2209_READ;
-    dataWrite[3] = tmc2209Crc8(dataWrite, 3);
-
-    huart2.write(dataWrite, 4);
-
-    delay(10);
-
-    int bytesRead = 0;
-    while (huart2.available() < 8 && bytesRead < 8)
-    {
-        bytesRead++;
-    }
-
-    for (int i = 0; i < 8; i++)
-    {
-        if (huart2.available())
-        {
-            dataResponse[i] = huart2.read();
-        }
-    }
-
-    return ((uint32_t)dataResponse[4] << 24) |
-           ((uint32_t)dataResponse[5] << 16) |
-           ((uint32_t)dataResponse[6] << 8) |
-           dataResponse[7];
-}
-
-void decodeDVRStatus(uint32_t value)
-{
-    serialSendMessage("DRVSTATUS: 0x%08lX", value);
-
-    serialSendMessage("[%s] Overtemp warning", ((value >> 30) & 1) ? "x" : " ");
-    serialSendMessage("[%s] Overtemp shutdown", ((value >> 27) & 1) ? "x" : " ");
-    serialSendMessage("[%s] Short to GND A", ((value >> 26) & 1) ? "x" : " ");
-    serialSendMessage("[%s] Short to GND B", ((value >> 25) & 1) ? "x" : " ");
-    serialSendMessage("[%s] Open load A", ((value >> 24) & 1) ? "x" : " ");
-    serialSendMessage("[%s] Open load B", ((value >> 23) & 1) ? "x" : " ");
-    serialSendMessage("[%s] StallGuard triggered", ((value >> 22) & 1) ? "x" : " ");
-
-    serialSendMessage("Actual current: %u", (value >> 16) & 0x1F);
-    serialSendMessage("StallGuard value: %u", value & 0xFFFF);
-}
-
-TMC2209Stepper driver(&huart2, 0.11f, 0x00);
-const uint16_t rmsCurrent = 600;
-const uint16_t stepRevolution = 200; // 1.8°
-const uint16_t microstep = 32;       // 1, 2, 4, 8, 16, 32, 64, 128, 256
-const uint32_t stepTotal = stepRevolution * microstep;
-volatile uint16_t stepCount = 0;
-
-void Timer2Init()
+void htim2Init()
 {
     htim2->setOverflow(100, MICROSEC_FORMAT);
 
@@ -188,35 +102,155 @@ void Timer2Init()
         static bool stepState = false;
 
         if (stepCount >= stepTotal)
+        {
             return;
+        }
 
-        digitalWrite(MOTOR_X_STEP_PIN, stepState);
+        //tmc2209Step(MOTOR_X_ADDRESS, stepState);
+        //digitalWrite(MOTOR_X_STEP, stepState);
 
         stepState = !stepState;
 
         if (!stepState)
-            stepCount++; });
+        {
+            stepCount++;
+        } });
 
     htim2->resume();
-}*/
+}
+
+uint8_t tmc2209_calcCRC(uint8_t *data, uint8_t length)
+{
+    uint8_t crc = 0;
+
+    for (int a = 0; a < length; a++)
+    {
+        crc ^= data[a];
+
+        for (int b = 0; b < 8; b++)
+        {
+            if (crc & 0x80)
+            {
+                crc = (crc << 1) ^ 0x07;
+            }
+            else
+            {
+                crc <<= 1;
+            }
+        }
+    }
+
+    return crc;
+}
+
+void tmc2209_writeInt(uint8_t slaveAddress, uint8_t regAddress, uint32_t value)
+{
+    uint8_t data[8];
+
+    data[0] = 0x05;
+    data[1] = slaveAddress & 0xFF;
+    data[2] = regAddress | 0x80;
+    data[3] = (value >> 0) & 0xFF;
+    data[4] = (value >> 8) & 0xFF;
+    data[5] = (value >> 16) & 0xFF;
+    data[6] = (value >> 24) & 0xFF;
+    data[7] = tmc2209_calcCRC(data, 7);
+
+    Serial3.write(data, 8);
+}
+
+bool tmc2209_readInt(uint8_t slaveAddress, uint8_t regAddress, uint32_t &valueOut)
+{
+    uint8_t request[4];
+
+    request[0] = 0x05;
+    request[1] = slaveAddress & 0xFF;
+    request[2] = regAddress & 0x7F;
+    request[3] = tmc2209_calcCRC(request, 3);
+
+    Serial3.write(request, 4);
+
+    delay(10);
+
+    uint8_t response[6];
+    int bytesRead = 0;
+
+    while (bytesRead < 6)
+    {
+        if (Serial3.available())
+        {
+            response[bytesRead] = Serial3.read();
+
+            Serial.print("Byte[");
+            Serial.print(bytesRead);
+            Serial.print("] = 0x");
+            Serial.println(response[bytesRead], HEX);
+
+            bytesRead++;
+        }
+
+        delay(1);
+    }
+
+    if (bytesRead != 6)
+    {
+        Serial.println("Errore BYTE!");
+
+        return false;
+    }
+
+    if (tmc2209_calcCRC(response, 5) != response[5])
+    {
+        Serial.println("Errore CRC!");
+        Serial.print("CRC Atteso: 0x");
+        Serial.println(tmc2209_calcCRC(response, 5), HEX);
+        Serial.print("CRC Ricevuto: 0x");
+        Serial.println(response[5], HEX);
+
+        return false;
+    }
+
+    valueOut = (uint32_t)response[1] |
+               ((uint32_t)response[2] << 8) |
+               ((uint32_t)response[3] << 16) |
+               ((uint32_t)response[4] << 24);
+
+    return true;
+}
+
+void tmc2209_disable(uint8_t slaveAddress)
+{
+    uint32_t value = (0 << 0) | (0 << 8) | (5 << 16); // ihold=0, irun=0, delay=5
+
+    tmc2209_writeInt(slaveAddress, TMC2209_IHOLD_IRUN, value);
+}
+
+void tmc2209_enable(uint8_t slaveAddress)
+{
+    uint32_t value = (8 << 0) | (31 << 8) | (5 << 16); // ihold=8, irun=31, delay=5
+
+    tmc2209_writeInt(slaveAddress, TMC2209_IHOLD_IRUN, value);
+}
 
 void setup()
 {
     pinMode(LED_BUILTIN, OUTPUT);
 
-    /*pinMode(MOTOR_X_EN_PIN, OUTPUT);
-    pinMode(MOTOR_X_DIR_PIN, OUTPUT);
-    pinMode(MOTOR_X_STEP_PIN, OUTPUT);*/
+    pinMode(PB10, OUTPUT);
+    pinMode(PB11, OUTPUT);
+
+    pinMode(MOTOR_X_EN, OUTPUT);
+    pinMode(MOTOR_X_DIR, OUTPUT);
+    pinMode(MOTOR_X_STEP, OUTPUT);
 
     Serial.begin(9600);
-    /*huart2.begin(115200);
 
-    while (!Serial && !huart2)
-    {
-        delay(10);
-    }*/
+    // Serial3.setHalfDuplex();
+    // Serial3.isHalfDuplex();
+    // Serial3.enableHalfDuplexRx();
+    Serial3.begin(115200);
 
-    while (!Serial)
+    while (!Serial && !Serial3)
     {
         delay(10);
     }
@@ -226,7 +260,7 @@ void setup()
     lcdI2cCommandInit();
 
     // sdCardCommandInit();
-
+    /*
     if (sd.begin(SD2_CONFIG))
     {
         uint32_t cardSize = sd.card()->sectorCount();
@@ -276,16 +310,12 @@ void setup()
 
         printDirectory(dir, 0);
     }
+    */
 
-    // tmc2209RegisterWrite(0x00, 0x10, 0x00);
+    htim2Init();
 
-    /*Timer2Init();
-
-    // digitalWrite(MOTOR_X_EN_PIN, LOW);
-
-    driver.begin();
-    driver.rms_current(rmsCurrent);
-    driver.microsteps(microstep);*/
+    // digitalWrite(MOTOR_X_EN, LOW);
+    // tmc2209Current(MOTOR_X_ADDRESS, 5, 31, 8);
 }
 
 void loop()
@@ -305,4 +335,17 @@ void loop()
         // uint32_t drvstatus = tmc2209RegisterRead(0x00, TMC2209_DRVSTATUS);
         // decodeDVRStatus(drvstatus);
     }
+
+    Serial.println("TMC2209 test start.");
+
+    tmc2209_enable(MOTOR_X_ADDRESS);
+
+    delay(10);
+
+    uint32_t val;
+    tmc2209_readInt(MOTOR_X_ADDRESS, TMC2209_IHOLD_IRUN, val);
+
+    Serial.println("Test complete.");
+
+    delay(1000);
 }

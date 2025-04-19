@@ -68,24 +68,24 @@ void customSerialCommand()
     {
         HAL_GPIO_WritePin(E_FAN_GPIO_Port, E_FAN_Pin, GPIO_PIN_SET);
 
-        serialSendMessage("test1 on.");
-        serialSendMessage("test2 on.");
-        serialSendMessage("test3 on.");
-        serialSendMessage("E_FAN: On.");
-        serialSendMessage("test4 on.");
-        serialSendMessage("test5 on.");
+        serialAsynchronousSendMessage("test1 on.");
+        serialAsynchronousSendMessage("test2 on.");
+        serialAsynchronousSendMessage("test3 on.");
+        serialAsynchronousSendMessage("E_FAN: On.");
+        serialAsynchronousSendMessage("test4 on.");
+        serialAsynchronousSendMessage("test5 on.");
     }
     else if (serialCheckCommand("e_fan_off"))
     {
         HAL_GPIO_WritePin(E_FAN_GPIO_Port, E_FAN_Pin, GPIO_PIN_RESET);
 
-        serialSendMessage("test1 off.");
-        serialSendMessage("E_FAN: Off.");
-        serialSendMessage("test2 off.");
+        serialAsynchronousSendMessage("test1 off.");
+        serialAsynchronousSendMessage("E_FAN: Off.");
+        serialAsynchronousSendMessage("test2 off.");
     }
     else
     {
-        serialSendMessage("UART info: Unknown command.");
+        serialAsynchronousSendMessage("UART info: Unknown command.");
     }
 }
 /* USER CODE END 0 */
@@ -124,7 +124,7 @@ int main(void)
     MX_FATFS_Init();
     /* USER CODE BEGIN 2 */
     // cimo +
-    serialInit(&huart3, customSerialCommand);
+    serialAsynchronousInit(&huart3, customSerialCommand);
     /* USER CODE END 2 */
 
     /* Infinite loop */

@@ -26,8 +26,8 @@
 #include "helper.h"
 #include "localization.h"
 #include "serial_command.h"
-#include "display_i2c_command.h"
-#include "sd_spi_command.h"
+// #include "display_i2c_command.h"
+// #include "sd_spi_command.h"
 // #include "tmc2209_command.h"
 /* USER CODE END Includes */
 
@@ -51,11 +51,12 @@ I2C_HandleTypeDef hi2c1;
 
 SPI_HandleTypeDef hspi2;
 
+TIM_HandleTypeDef htim2;
+
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart3;
 DMA_HandleTypeDef hdma_usart1_tx;
 DMA_HandleTypeDef hdma_usart1_rx;
-DMA_HandleTypeDef hdma_usart3_tx;
 
 /* USER CODE BEGIN PV */
 
@@ -69,6 +70,7 @@ static void MX_USART1_UART_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_USART3_UART_Init(void);
+static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -116,37 +118,40 @@ int main(void)
     MX_I2C1_Init();
     MX_SPI2_Init();
     MX_USART3_UART_Init();
+    MX_TIM2_Init();
     /* USER CODE BEGIN 2 */
     // cimo +
-    localizationInit("EN");
+    localizationInit("en");
 
-    serialCommandInit(&huart1);
+    serialCommandAsynchronousInit(&huart1);
+    serialCommandSingleWireInit(&huart3);
 
-    lcdI2cCommandInit(&hi2c1);
+    // lcdI2cCommandInit(&hi2c1);
 
-    sdSpiCommandInit(&hspi2);
+    // sdSpiCommandInit(&hspi2);
 
     // tmc2209CommandInit(&huart3, &htim2);
     /* USER CODE END 2 */
 
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
-
     while (1)
     {
         if (helperMillisecondElapsed(&previousTimeLed, 100))
         {
-            HAL_GPIO_TogglePin(LED_1_GPIO_Port, LED_1_Pin);
+            // HAL_GPIO_TogglePin(LED_1_GPIO_Port, LED_1_Pin);
         }
 
-        if (helperMillisecondElapsed(&previousTimeI2cLcd, 100))
+        if (helperMillisecondElapsed(&previousTimeI2cLcd, 1000))
         {
-            lcdI2cCommandLoop();
+            // lcdI2cCommandLoop("loop3");
         }
 
-        if (helperMillisecondElapsed(&previousTimeTmc2209, 1000))
+        if (helperMillisecondElapsed(&previousTimeTmc2209, 5000))
         {
-            // tmc2209Debug();
+            // tmc2209CommandLoop();
+
+            serialSingleWireSendMessage("Sended");
         }
         /* USER CODE END WHILE */
 
@@ -264,6 +269,50 @@ static void MX_SPI2_Init(void)
 }
 
 /**
+ * @brief TIM2 Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_TIM2_Init(void)
+{
+
+    /* USER CODE BEGIN TIM2_Init 0 */
+
+    /* USER CODE END TIM2_Init 0 */
+
+    TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+    TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+    /* USER CODE BEGIN TIM2_Init 1 */
+
+    /* USER CODE END TIM2_Init 1 */
+    htim2.Instance = TIM2;
+    htim2.Init.Prescaler = 0;
+    htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+    htim2.Init.Period = 49999;
+    htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+    if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+    {
+        Error_Handler();
+    }
+    sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+    if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+    {
+        Error_Handler();
+    }
+    sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+    sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+    if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+    {
+        Error_Handler();
+    }
+    /* USER CODE BEGIN TIM2_Init 2 */
+
+    /* USER CODE END TIM2_Init 2 */
+}
+
+/**
  * @brief USART1 Initialization Function
  * @param None
  * @retval None
@@ -337,9 +386,6 @@ static void MX_DMA_Init(void)
     __HAL_RCC_DMA1_CLK_ENABLE();
 
     /* DMA interrupt init */
-    /* DMA1_Channel2_IRQn interrupt configuration */
-    HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
     /* DMA1_Channel4_IRQn interrupt configuration */
     HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
@@ -369,7 +415,7 @@ static void MX_GPIO_Init(void)
     HAL_GPIO_WritePin(LED_1_GPIO_Port, LED_1_Pin, GPIO_PIN_RESET);
 
     /*Configure GPIO pin Output Level */
-    HAL_GPIO_WritePin(GPIOA, GPIO_C_A0_Pin | GPIO_C_A1_Pin | GPIO_C_A2_Pin | GPIO_C_A3_Pin | GPIO_C_A4_Pin | GPIO_C_A5_Pin | GPIO_C_A6_Pin | GPIO_C_A7_Pin | GPIO_C_A8_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOA, MOTOR_X_EN_Pin | MOTOR_X_DIR_Pin | MOTOR_X_STEP_Pin | GPIO_C_A3_Pin | GPIO_C_A4_Pin | GPIO_C_A5_Pin | GPIO_C_A6_Pin | GPIO_C_A7_Pin | GPIO_C_A8_Pin, GPIO_PIN_RESET);
 
     /*Configure GPIO pin Output Level */
     HAL_GPIO_WritePin(GPIOB, GPIO_C_B0_Pin | GPIO_C_B1_Pin | GPIO_C_B2_Pin | SD_SPI_CS_Pin | GPIO_C_B3_Pin | GPIO_C_B4_Pin | GPIO_C_B5_Pin | GPIO_C_B8_Pin | GPIO_C_B9_Pin, GPIO_PIN_RESET);
@@ -381,10 +427,10 @@ static void MX_GPIO_Init(void)
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(LED_1_GPIO_Port, &GPIO_InitStruct);
 
-    /*Configure GPIO pins : GPIO_C_A0_Pin GPIO_C_A1_Pin GPIO_C_A2_Pin GPIO_C_A3_Pin
+    /*Configure GPIO pins : MOTOR_X_EN_Pin MOTOR_X_DIR_Pin MOTOR_X_STEP_Pin GPIO_C_A3_Pin
                              GPIO_C_A4_Pin GPIO_C_A5_Pin GPIO_C_A6_Pin GPIO_C_A7_Pin
                              GPIO_C_A8_Pin */
-    GPIO_InitStruct.Pin = GPIO_C_A0_Pin | GPIO_C_A1_Pin | GPIO_C_A2_Pin | GPIO_C_A3_Pin | GPIO_C_A4_Pin | GPIO_C_A5_Pin | GPIO_C_A6_Pin | GPIO_C_A7_Pin | GPIO_C_A8_Pin;
+    GPIO_InitStruct.Pin = MOTOR_X_EN_Pin | MOTOR_X_DIR_Pin | MOTOR_X_STEP_Pin | GPIO_C_A3_Pin | GPIO_C_A4_Pin | GPIO_C_A5_Pin | GPIO_C_A6_Pin | GPIO_C_A7_Pin | GPIO_C_A8_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;

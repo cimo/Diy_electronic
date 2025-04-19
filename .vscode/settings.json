@@ -59,6 +59,10 @@
         "unordered_map": "cpp",
         "vector": "cpp",
         "string_view": "cpp",
-        "initializer_list": "cpp"
+        "initializer_list": "cpp",
+        "serial_command.h": "c",
+        "localization.h": "c",
+        "serial.h": "c",
+        "tmc2209.h": "c"
     }
 }

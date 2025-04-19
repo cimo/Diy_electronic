@@ -6,6 +6,8 @@
 #include <string.h>
 #include "stm32f1xx_hal.h"
 #include "ssd1306.h"
+#include "helper.h"
+#include "serial.h"
 
 void i2cLcdInit(FontDef_t *fontValue, uint16_t lineTotalValue, uint16_t bufferTotalValue);
 void i2cLcdClear();
