@@ -15,12 +15,14 @@ Fully integrated with PlatformIO, making it easy to set up a project using just 
 
 1. In the "mainboard" folder, create a subfolder (for example "blue_pill/PlatformIO") and add the "board.ini" file inside.
 
-2. In the "mcu" folder, create a subfolder (for example "stm32f103c8t6") and add "arduino", "esp32", and "stm32cube" subfolders based on the frameworks you want to use. Multiple frameworks can be used simultaneously.
+2. In the "mcu" folder, create a subfolder (for example "stm32f103c8t6") and add "arduino", "esp32", and "stm32cube" subfolders.
+    Multiple frameworks can be used simultaneously.
 
     The main project files should be placed inside these subfolders.
     STM32 supports CubeMX projects, that need be generated in this folder.
 
-3. In the "src_arduino", "src_esp32", and "src_stm32cube" folders, you can store your libraries and custom code. Organize them based on the processor folders created in step 2.
+3. In the "src_arduino", "src_esp32", and "src_stm32cube" folders, you can store your libraries and custom code.
+    Organize them based on the processor folders created in step 2.
 
 ## Example:
 
@@ -48,8 +50,8 @@ Fully integrated with PlatformIO, making it easy to set up a project using just 
 
     **Framework:** arduino, stm32cube
 
-All examples are ready for deployment and can be uploaded directly to your board.
-If you start a new project, simply copy an existing one, paste it, and customize it as needed.
+    All examples are ready for deployment and can be uploaded directly to your board.
+    If you start a new project, simply duplicate an existing one and customize it as needed.
 
 ## Library:
 

@@ -1,0 +1,61 @@
+//
+// !!! WARNING !!! AUTO-GENERATED FILE!
+// PLEASE DO NOT MODIFY IT AND USE "platformio.ini":
+// https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags
+//
+{
+    "configurations": [
+        {
+            "name": "PlatformIO",
+            "includePath": [
+                "/home/cimo/workspace/diy_electronic",
+                "/home/cimo/workspace/diy_electronic/mcu/stm32f103c8t6/stm32cube/Core/Inc",
+                "/home/cimo/workspace/diy_electronic/mcu/stm32f103c8t6/stm32cube/Drivers/CMSIS/Device/ST/STM32F1xx/Include",
+                "/home/cimo/workspace/diy_electronic/mcu/stm32f103c8t6/stm32cube/Drivers/CMSIS/Include",
+                "/home/cimo/workspace/diy_electronic/mcu/stm32f103c8t6/stm32cube/Drivers/STM32F1xx_HAL_Driver/Inc",
+                "/home/cimo/workspace/diy_electronic/mcu/stm32f103c8t6/stm32cube/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy",
+                "/home/cimo/workspace/diy_electronic/mcu/stm32f103c8t6/stm32cube/FATFS/App",
+                "/home/cimo/workspace/diy_electronic/mcu/stm32f103c8t6/stm32cube/FATFS/Target",
+                "/home/cimo/workspace/diy_electronic/mcu/stm32f103c8t6/stm32cube/Middlewares/Third_Party/FatFs/src",
+                "/home/cimo/workspace/diy_electronic/src_stm32cube",
+                "/home/cimo/workspace/diy_electronic/src_stm32cube/library/display_i2c",
+                "/home/cimo/workspace/diy_electronic/src_stm32cube/library/sd_spi",
+                "/home/cimo/workspace/diy_electronic/src_stm32cube/stm32f103c8t6",
+                ""
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true,
+                "path": [
+                    "/home/cimo/workspace/diy_electronic",
+                    "/home/cimo/workspace/diy_electronic/mcu/stm32f103c8t6/stm32cube/Core/Inc",
+                    "/home/cimo/workspace/diy_electronic/mcu/stm32f103c8t6/stm32cube/Drivers/CMSIS/Device/ST/STM32F1xx/Include",
+                    "/home/cimo/workspace/diy_electronic/mcu/stm32f103c8t6/stm32cube/Drivers/CMSIS/Include",
+                    "/home/cimo/workspace/diy_electronic/mcu/stm32f103c8t6/stm32cube/Drivers/STM32F1xx_HAL_Driver/Inc",
+                    "/home/cimo/workspace/diy_electronic/mcu/stm32f103c8t6/stm32cube/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy",
+                    "/home/cimo/workspace/diy_electronic/mcu/stm32f103c8t6/stm32cube/FATFS/App",
+                    "/home/cimo/workspace/diy_electronic/mcu/stm32f103c8t6/stm32cube/FATFS/Target",
+                    "/home/cimo/workspace/diy_electronic/mcu/stm32f103c8t6/stm32cube/Middlewares/Third_Party/FatFs/src",
+                    "/home/cimo/workspace/diy_electronic/src_stm32cube",
+                    "/home/cimo/workspace/diy_electronic/src_stm32cube/library/display_i2c",
+                    "/home/cimo/workspace/diy_electronic/src_stm32cube/library/sd_spi",
+                    "/home/cimo/workspace/diy_electronic/src_stm32cube/stm32f103c8t6",
+                    ""
+                ]
+            },
+            "defines": [
+                "F_CPU=72000000L",
+                "PLATFORMIO=60119",
+                "STM32F1",
+                "STM32F103xB",
+                ""
+            ],
+            "compilerPath": "/home/cimo/.platformio/packages/toolchain-gccarmnoneeabi@1.70201.0/bin/arm-none-eabi-gcc",
+            "compilerArgs": [
+                "-mthumb",
+                "-mcpu=cortex-m3",
+                ""
+            ]
+        }
+    ],
+    "version": 4
+}
